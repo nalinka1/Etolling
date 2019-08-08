@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +30,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     protected String emailAddress;
     EditText getEmail,getPassword;
     boolean emailCorrect,passwordCorrect;
+    boolean serverBusy;
+
+
 
 
     // https variables
@@ -97,16 +101,18 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                 jsonSignInApi = retro.create(JsonSignInApi.class);
 
+
                 PostSignIn post = new PostSignIn(emailAddress,password);
                 Call<PostSignIn> call = jsonSignInApi.createPost(post);
+
 
 
                 call.enqueue(new Callback<PostSignIn>() {
                     @Override
                     public void onResponse(Call<PostSignIn> call, Response<PostSignIn> response) {
                         if(!response.isSuccessful()){
-
                             getEmail.setText("code : "+response.code());
+
                             return;
 
                         }
@@ -133,11 +139,26 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                         getEmail.setText(t.getMessage());
                     }
                 });
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //................................................................................................................................
+                // delete this later
+
+                emailCorrect=true;
+                passwordCorrect=true;
+                serverBusy=false;
+
 
                 //......................................................................................................................................................................
 
                 if(passwordValidation()&& EmailValidation()){
-                    if(emailCorrect && passwordCorrect){
+                    if(serverBusy){
+                        Toast.makeText(this,"Server is busy",Toast.LENGTH_LONG).show();
+                    }
+                    else if(emailCorrect && passwordCorrect ){
                         String encriptPassword = encrypt(password);
                         String encriptEmail    = encrypt(emailAddress);
 
@@ -260,6 +281,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
         });
 
     }
+
 
 
 }
