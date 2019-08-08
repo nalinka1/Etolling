@@ -178,7 +178,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                         @Override
                         public void onFailure(Call<PostSignIn> call, Throwable t) {
-                            getEmail.setText(t.getMessage());
+                            getEmail.setText("Internet failure");
+
                         }
                     });
 
