@@ -96,54 +96,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                 // https validation.....................................................................................................................................................
 
-                Retrofit retro = new Retrofit.Builder().baseUrl("https://api.myjson.com/bins/").addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                jsonSignInApi = retro.create(JsonSignInApi.class);
 
 
-                PostSignIn post = new PostSignIn(emailAddress,password);
-                Call<PostSignIn> call = jsonSignInApi.createPost(post);
-
-
-
-                call.enqueue(new Callback<PostSignIn>() {
-                    @Override
-                    public void onResponse(Call<PostSignIn> call, Response<PostSignIn> response) {
-                        if(!response.isSuccessful()){
-                            getEmail.setText("code : "+response.code());
-
-                            return;
-
-                        }
-
-                        int code = response.code();
-                        if(code==302){
-                            emailCorrect= true;
-                            passwordCorrect= true;
-                        }
-                        else if(code==403){
-                            emailCorrect=true;
-                            passwordCorrect= false;
-                        }
-                        else if (code==404){
-                            emailCorrect= false;
-                            passwordCorrect= false;
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<PostSignIn> call, Throwable t) {
-                        getEmail.setText(t.getMessage());
-                    }
-                });
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 //................................................................................................................................
                 // delete this later
 
@@ -155,45 +109,79 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                 //......................................................................................................................................................................
 
                 if(passwordValidation()&& EmailValidation()){
-                    if(serverBusy){
-                        Toast.makeText(this,"Server is busy",Toast.LENGTH_LONG).show();
-                    }
-                    else if(emailCorrect && passwordCorrect ){
-                        String encriptPassword = encrypt(password);
-                        String encriptEmail    = encrypt(emailAddress);
 
-                        getEmail.getText().clear();
-                        getPassword.getText().clear();
+                    Retrofit retro = new Retrofit.Builder().baseUrl("https://api.myjson.com/bins/").addConverterFactory(GsonConverterFactory.create())
+                            .build();
 
-                        SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
-                        SharedPreferences.Editor edit = storeInput.edit();
-                        edit.putString("user_password",encriptPassword);
-                        edit.putString("user_email",encriptEmail);
-
-                        edit.commit();
+                    jsonSignInApi = retro.create(JsonSignInApi.class);
 
 
-                        Intent goHome = new Intent(Signup.this,Home.class);
-                        goHome.putExtra("user",UserNameForNow);
-                        goHome.putExtra("Email",emailAddress);
-                        startActivity(goHome);
-                        finish();
-                    }
+                    PostSignIn post = new PostSignIn(emailAddress,password);
+                    Call<PostSignIn> call = jsonSignInApi.createPost(post);
 
-                    else if(emailCorrect){
-                        getPassword.getText().clear();
-                        passwordValidation();
-                    }
-                    else if(passwordCorrect){
-                        getEmail.getText().clear();
-                        EmailValidation();
-                    }
-                    else{
-                        getEmail.getText().clear();
-                        getPassword.getText().clear();
-                        passwordValidation();
-                        EmailValidation();
-                    }
+
+
+                    call.enqueue(new Callback<PostSignIn>() {
+                        @Override
+                        public void onResponse(Call<PostSignIn> call, Response<PostSignIn> response) {
+                            if(!response.isSuccessful()){
+                                Toast.makeText(getBaseContext(),"Server is busy",Toast.LENGTH_LONG).show();
+                                getEmail.setText("code : "+response.code());
+
+                                //uncomment this later
+
+                                //return;
+
+                            }
+
+                            int code = response.code();
+                            //uncomment this later
+                            //if(code==302){
+                            if(true){
+                                String encriptPassword = encrypt(password);
+                                String encriptEmail    = encrypt(emailAddress);
+
+                                getEmail.getText().clear();
+                                getPassword.getText().clear();
+
+                                SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
+                                SharedPreferences.Editor edit = storeInput.edit();
+                                edit.putString("user_password",encriptPassword);
+                                edit.putString("user_email",encriptEmail);
+
+                                edit.commit();
+
+
+                                Intent goHome = new Intent(Signup.this,Home.class);
+                                goHome.putExtra("user",UserNameForNow);
+                                goHome.putExtra("Email",emailAddress);
+                                startActivity(goHome);
+                                finish();
+                            }
+                            else if(code==403){
+                                getPassword.getText().clear();
+                                passwordValidation();
+                            }
+                            else if (code==404){
+                                getEmail.getText().clear();
+                                EmailValidation();
+                            }
+                            else{
+                                getEmail.getText().clear();
+                                getPassword.getText().clear();
+                                passwordValidation();
+                                EmailValidation();
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostSignIn> call, Throwable t) {
+                            getEmail.setText(t.getMessage());
+                        }
+                    });
+
                 }
 
 
