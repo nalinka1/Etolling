@@ -1,9 +1,14 @@
 package com.heshanexample.etolling;
 
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,11 +34,18 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView userNameShow,userEmailShow;
     Intent main_activity;
     String user_name,user_email;
+
+    WifiManager wifiManager;
+    TextView textView1;
+    TextView textView2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +87,66 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userNameShow.setText(user_name);
         userEmailShow.setText(user_email);
 
+////////////////////////// wifi scanner \\\\\\\\\\\\\\\\\\\\
 
+        wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
+        //textView1 = (TextView)findViewById(R.id.wifiStateTextView);
+        textView2 = (TextView)findViewById(R.id.wifiListTextView);
 
+        if (!wifiManager.isWifiEnabled()){
+            wifiManager.setWifiEnabled(true);
+            //textView1.setText("WiFi is ON");
+        }
+        MyBroadcasrReceiver myBroadcasrReceiver = new MyBroadcasrReceiver();
+        registerReceiver(myBroadcasrReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        //wifiManager.startScan();
+        loop a = new loop();
+        a.start();
 
     }
+
+
+
+
+    class loop extends Thread{
+        public void run(){
+            while (true){
+                wifiManager.startScan();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class MyBroadcasrReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            StringBuffer stringBuffer = new StringBuffer();
+            StringBuffer stringBuffer1 = new StringBuffer();
+            List<ScanResult> list = wifiManager.getScanResults();
+            for(ScanResult scanResult:list){
+                stringBuffer.append(scanResult.SSID+"\n"+scanResult.BSSID+"\n"+"\n");
+                stringBuffer1.append(scanResult.BSSID);
+                //textView1.setText(scanResult.BSSID);
+                if (scanResult.BSSID.contains("82:ce:b9:92:fa:c3")){
+                    //textView1.setText("Scaned Ishan");
+                    Toast.makeText(Home.this,"Scanned Ishan",Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    //textView1.setText("scanning");
+                }
+            }
+            textView2.setText(stringBuffer);
+
+        }
+    }
+
+/////////////////////// end of wifi part \\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Override
     public void onBackPressed() {
