@@ -130,14 +130,14 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                                 //uncomment this later
 
-                                //return;
+                                return;
 
                             }
 
                             int code = response.code();
-                            //uncomment this later
-                            //if(code==302){
-                            if(true){
+
+
+                            if(code==302){
                                 String encriptPassword = encrypt(password);
                                 String encriptEmail    = encrypt(emailAddress);
 
