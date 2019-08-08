@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Encript_email = getDetails.getString("user_email",null);
         Encript_password= getDetails.getString("user_password",null);
 
+
         if(Encript_email==null){
 
             signUp = new Intent(MainActivity.this,Signup.class);
