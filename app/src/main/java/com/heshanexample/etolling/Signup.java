@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -29,8 +32,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     private String password;
     protected String emailAddress;
     EditText getEmail,getPassword;
-    boolean emailCorrect,passwordCorrect;
-    boolean serverBusy;
 
 
 
@@ -38,8 +39,24 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     // https variables
     JsonSignInApi jsonSignInApi;
 
-    // temporary name-- delete this after testing is finished
-    String UserNameForNow= "heshan Nalinka";
+    // https response for sign In details variables
+
+    private String userFirstName;
+    private String userLastName;
+    private String userAddress;
+    private String userIdNumber;
+    private String userPhoneNumber;
+    private String accountNumber;
+    private String ownerName;
+    private int balance;
+
+    private String userName;
+
+
+
+
+
+
 
 
 
@@ -94,18 +111,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                 password= getPassword.getText().toString();
 
 
-                // https validation.....................................................................................................................................................
-
-
-
-                //................................................................................................................................
-                // delete this later
-
-                emailCorrect=true;
-                passwordCorrect=true;
-                serverBusy=false;
-
-
                 //......................................................................................................................................................................
 
                 if(passwordValidation()&& EmailValidation()){
@@ -141,6 +146,30 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 String encriptPassword = encrypt(password);
                                 String encriptEmail    = encrypt(emailAddress);
 
+                                ObjectMapper mapper = new ObjectMapper();
+                                PostSignIn signIndetails = response.body();
+
+                                userFirstName = signIndetails.getFirstName();
+                                userLastName= signIndetails.getLastName();
+                                userAddress= signIndetails.getAddress();
+                                userIdNumber=signIndetails.getIdNumber();
+                                userPhoneNumber=signIndetails.getPhoneNumber();
+
+                                userName = userFirstName+" "+userLastName;
+
+                                try {
+                                    String accountInString = mapper.writeValueAsString(response.body().getAccount());
+                                    account userAccount = mapper.readValue(accountInString,account.class);
+                                    accountNumber = userAccount.getAccountNo();
+                                    ownerName = userAccount.getOwnerName();
+                                    balance = userAccount.getBalance();
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
                                 getEmail.getText().clear();
                                 getPassword.getText().clear();
 
@@ -153,7 +182,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
 
                                 Intent goHome = new Intent(Signup.this,Home.class);
-                                goHome.putExtra("user",UserNameForNow);
+                                goHome.putExtra("user",userName);
                                 goHome.putExtra("Email",emailAddress);
                                 startActivity(goHome);
                                 finish();
@@ -178,6 +207,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                         @Override
                         public void onFailure(Call<PostSignIn> call, Throwable t) {
+                            Toast.makeText(getBaseContext(),"Internet failure.!",Toast.LENGTH_LONG).show();
                             getEmail.setText("Internet failure");
 
                         }
@@ -237,39 +267,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
             return true;
         }
     }
-
-    // https function post request
-
-    protected void createPost(String inputEmail,String inputPassword){
-
-        Retrofit retro = new Retrofit.Builder().baseUrl("https://api.myjson.com/bins/").addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        jsonSignInApi = retro.create(JsonSignInApi.class);
-
-        PostSignIn post = new PostSignIn(inputEmail,inputPassword);
-        Call<PostSignIn> call = jsonSignInApi.createPost(post);
-
-
-        call.enqueue(new Callback<PostSignIn>() {
-            @Override
-            public void onResponse(Call<PostSignIn> call, Response<PostSignIn> response) {
-                if(!response.isSuccessful()){
-
-                    getEmail.setText("code : "+response.code());
-                    return;
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<PostSignIn> call, Throwable t) {
-                getEmail.setText(t.getMessage());
-            }
-        });
-
-    }
+    
 
 
 
