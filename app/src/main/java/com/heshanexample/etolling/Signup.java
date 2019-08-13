@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -12,6 +14,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,8 +37,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     EditText getEmail,getPassword;
 
 
-
-
     // https variables
     JsonSignInApi jsonSignInApi;
 
@@ -51,13 +52,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     private int balance;
 
     private String userName;
-
-
-
-
-
-
-
 
 
 
@@ -120,9 +114,15 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                     jsonSignInApi = retro.create(JsonSignInApi.class);
 
+                    //......................delete this later
+                    Call<PostSignIn> call = jsonSignInApi.getPosts();
 
-                    PostSignIn post = new PostSignIn(emailAddress,password);
-                    Call<PostSignIn> call = jsonSignInApi.createPost(post);
+                    final String encriptPassword = encrypt(password);
+                    final String encriptEmail    = encrypt(emailAddress);
+
+                    PostSignIn post = new PostSignIn(encriptEmail,encriptPassword);
+                    //........................uncomment this..later..............
+                    //Call<PostSignIn> call = jsonSignInApi.createPost(post);
 
 
 
@@ -141,10 +141,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                             int code = response.code();
 
+                            if(true){
+                            //if(code==302){
 
-                            if(code==302){
-                                String encriptPassword = encrypt(password);
-                                String encriptEmail    = encrypt(emailAddress);
 
                                 ObjectMapper mapper = new ObjectMapper();
                                 PostSignIn signIndetails = response.body();
@@ -169,6 +168,15 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                     e.printStackTrace();
                                 }
 
+                                ///////////////////////////// get vehicle
+
+                                ///////////////////////////////
+                                ////image//////
+                                String encodedIm= signIndetails.getImage();
+                                String pureIm =encodedIm.substring(encodedIm.indexOf(",")  + 1);
+                                final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
+                                Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
 
                                 getEmail.getText().clear();
                                 getPassword.getText().clear();
@@ -177,6 +185,16 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 SharedPreferences.Editor edit = storeInput.edit();
                                 edit.putString("user_password",encriptPassword);
                                 edit.putString("user_email",encriptEmail);
+                                edit.putString("first_name",userFirstName);
+                                edit.putString("last_name",userLastName);
+                                edit.putString("id_number",userIdNumber);
+                                edit.putString("phone_number",userPhoneNumber);
+                                edit.putString("address",userAddress);
+                                edit.putString("account_number",accountNumber);
+                                edit.putString("owner_name",ownerName);
+                                edit.putInt("balance",balance);
+                                edit.putString("encoded_image",encodedIm);
+                                edit.putString("user_name",userName);
 
                                 edit.commit();
 

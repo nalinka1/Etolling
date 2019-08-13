@@ -46,6 +46,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     TextView textView1;
     TextView textView2;
 
+
+    // user data
+
+    private String userFirstName;
+    private String userLastName;
+    private String userAddress;
+    private String userIdNumber;
+    private String userPhoneNumber;
+    private String accountNumber;
+    private String ownerName;
+    private int balance;
+    private String encodedImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +87,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         // get Navigation view
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        // get saved data in the app
+
+        SharedPreferences getDetails = getSharedPreferences("UserData",0);
+        userFirstName = getDetails.getString("first_name",null);
+        userLastName = getDetails.getString("last_name",null);
+        userAddress = getDetails.getString("address",null);
+        userIdNumber=getDetails.getString("id_number",null);
 
 // get header
         View navHeader = navigationView.getHeaderView(0);
@@ -204,10 +225,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 AlertDialog AlertLogout = LogoutCondition.create();
                 AlertLogout.setTitle("Logout !!!");
                 AlertLogout.show();
-
-
-
-
 
 
                 return true;

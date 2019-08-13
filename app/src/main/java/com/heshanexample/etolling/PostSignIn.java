@@ -21,6 +21,8 @@ public class PostSignIn {
     private String idNumber;
     @SerializedName("account")
     private Object account;
+    @SerializedName("image")
+    private String image;
 
 
     public PostSignIn(String inputEmail, String inputPassword) {
@@ -50,5 +52,9 @@ public class PostSignIn {
 
     public Object getAccount() {
         return account;
+    }
+
+    public String getImage() {
+        return image;
     }
 }

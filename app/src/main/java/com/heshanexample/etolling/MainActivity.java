@@ -14,7 +14,13 @@ public class MainActivity extends AppCompatActivity {
     Intent Home,signUp;
     String Encript_email,Encript_password,password;
     public String email;
-    public String User_Name = "Nalinka Heshan";
+    public String User_Name ;
+
+    // https response for sign In details variables
+
+
+
+
     // home page
 
     @Override
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
             email = decrypt(Encript_email);
             password = decrypt(Encript_password);
+
 
             Home = new Intent(MainActivity.this,Home.class);
             Home.putExtra("Email",email);
