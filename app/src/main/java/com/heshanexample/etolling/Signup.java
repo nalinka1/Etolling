@@ -108,6 +108,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                 //......................................................................................................................................................................
 
                 if(passwordValidation()&& EmailValidation()){
+                    Toast.makeText(getBaseContext(),"User Data Downloading...",Toast.LENGTH_LONG).show();
 
                     Retrofit retro = new Retrofit.Builder().baseUrl("https://api.myjson.com/bins/").addConverterFactory(GsonConverterFactory.create())
                             .build();
@@ -174,9 +175,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 ////image//////
                                 String encodedIm= signIndetails.getImage();
                                 String pureIm =encodedIm.substring(encodedIm.indexOf(",")  + 1);
-                                final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
-                                Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-
 
                                 getEmail.getText().clear();
                                 getPassword.getText().clear();
@@ -193,7 +191,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 edit.putString("account_number",accountNumber);
                                 edit.putString("owner_name",ownerName);
                                 edit.putInt("balance",balance);
-                                edit.putString("encoded_image",encodedIm);
+                                edit.putString("encoded_image",pureIm);
                                 edit.putString("user_name",userName);
 
                                 edit.commit();

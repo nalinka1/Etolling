@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -31,6 +35,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,7 +96,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         Toast.makeText(this, " welcome to home Page", Toast.LENGTH_LONG).show();
 
-        // get Navigation view
+        //get Navigation view
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         // get saved data in the app
@@ -101,15 +106,32 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userLastName = getDetails.getString("last_name",null);
         userAddress = getDetails.getString("address",null);
         userIdNumber=getDetails.getString("id_number",null);
+        userPhoneNumber= getDetails.getString("phone_number",null);
+        accountNumber=getDetails.getString("account_number",null);
+        ownerName= getDetails.getString("owner_name",null);
+        balance=getDetails.getInt("balance",0);
+
 
 // get header
         View navHeader = navigationView.getHeaderView(0);
+
+
+        // set image .....
+        String pureIm =getDetails.getString("encoded_image",null);
+        final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
+        Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
+
+        ImageView userImage = (ImageView) navHeader.findViewById(R.id.userImageView);
+        userImage.setImageBitmap(decodedBitmapOfImage);
+        // set user name and email
         userNameShow = (TextView) navHeader.findViewById(R.id.UserNameTextView);
         userEmailShow=(TextView)navHeader.findViewById(R.id.UserEmailTextView);
 
         main_activity=getIntent();
         user_name = main_activity.getStringExtra("user");
         user_email = main_activity.getStringExtra("Email");
+        user_name=userFirstName+" "+userLastName;
 
         userNameShow.setText(user_name);
         userEmailShow.setText(user_email);
@@ -126,7 +148,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         MyBroadcasrReceiver myBroadcasrReceiver = new MyBroadcasrReceiver();
         registerReceiver(myBroadcasrReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        //wifiManager.startScan();
+        wifiManager.startScan();
         loop a = new loop();
         a.start();
 
@@ -295,6 +317,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.nav_Profile) {
             // Handle the camera action
+
         } else if (id == R.id.nav_History) {
 
         } else if (id == R.id.nav_slideshow) {
