@@ -36,6 +36,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView userNameShow,userEmailShow;
@@ -111,7 +117,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 ////////////////////////// wifi scanner \\\\\\\\\\\\\\\\\\\\
 
         wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
-        //textView1 = (TextView)findViewById(R.id.wifiStateTextView);
+        textView1 = (TextView)findViewById(R.id.serverResponseTextView);
         textView2 = (TextView)findViewById(R.id.wifiListTextView);
 
         if (!wifiManager.isWifiEnabled()){
@@ -153,21 +159,69 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 stringBuffer.append(scanResult.SSID+"\n"+scanResult.BSSID+"\n"+"\n");
                 stringBuffer1.append(scanResult.BSSID);
                 //textView1.setText(scanResult.BSSID);
+
                 if (scanResult.BSSID.contains("82:ce:b9:92:fa:c3")){
                     //textView1.setText("Scaned Ishan");
                     Toast.makeText(Home.this,"Scanned Ishan",Toast.LENGTH_LONG).show();
-
                 }
                 else {
                     //textView1.setText("scanning");
                 }
             }
             textView2.setText(stringBuffer);
+            PostWiFiMethod("asdf","qwer.com",stringBuffer);
 
         }
     }
 
 /////////////////////// end of wifi part \\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+    ////////////// POST WIFI METHOD///////////////
+    public void PostWiFiMethod(String user, String mail, StringBuffer mac){
+        String fName = user;
+        String sName = mail;
+        StringBuffer ag = mac;
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://jsonplaceholder.typecode.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        JsonWiFiAPI jsonPlaceHolderApi = retrofit.create(JsonWiFiAPI.class);
+
+        final PostWiFi post = new PostWiFi(fName,ag,sName);
+        Call<PostWiFi> call = jsonPlaceHolderApi.createPost(post);
+
+        call.enqueue(new Callback<PostWiFi>() {
+            @Override
+            public void onResponse(Call<PostWiFi> call, Response<PostWiFi> response) {
+                if (!response.isSuccessful()){
+                    textView1.setText("Code: "+response.code());
+                }
+
+                PostWiFi postResponse = response.body();
+
+                String content = "\n";
+                        /*content += postResponse.getFirst_name()+"\n";
+                        content += postResponse.getSecond_name()+"\n";
+                        content += postResponse.getAge()+"\n\n";*/
+                content += postResponse.getId()+"\n";
+                textView1.append(content);
+            }
+
+            @Override
+            public void onFailure(Call<PostWiFi> call, Throwable t) {
+                textView1.setText(t.getMessage());
+            }
+        });
+
+
+    }
+
+
+
+    //////////////////////////////////////////////
 
     @Override
     public void onBackPressed() {

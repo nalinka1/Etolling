@@ -8,16 +8,55 @@
     tools:context=".Home"
     tools:showIn="@layout/app_bar_home">
 
-    <TextView
-        android:id="@+id/wifiListTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="283dp"
+        android:layout_height="224dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:hint="available APs"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.607"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/serverResponseTextView"
+        app:layout_constraintVertical_bias="0.062">
+
+        <TextView
+
+            android:id="@+id/wifiListTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#4CAF50"
+            android:hint="available APs"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.057" />
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/serverResponseTextView"
+        android:layout_width="275dp"
+        android:layout_height="212dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#009688"
+        android:hint="server response"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.566"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.069" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
