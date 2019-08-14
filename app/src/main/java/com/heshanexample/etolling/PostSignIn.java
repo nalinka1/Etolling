@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 public class PostSignIn {
 
     @SerializedName("email")
-    private String InputEmail;
+    private String email;
     @SerializedName("password")
-    private String InputPassword;
+    private String password;
 
     @SerializedName("firstName")
     private String firstName;
@@ -26,8 +26,8 @@ public class PostSignIn {
 
 
     public PostSignIn(String inputEmail, String inputPassword) {
-        InputEmail = inputEmail;
-        InputPassword = inputPassword;
+        email = inputEmail;
+        password = inputPassword;
     }
 
     public String getFirstName() {

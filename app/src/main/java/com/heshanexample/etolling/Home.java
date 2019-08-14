@@ -118,12 +118,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         // set image .....
         String pureIm =getDetails.getString("encoded_image",null);
-        final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
-        Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        if(pureIm.length()>20){
+            final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
+            Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
 
 
-        ImageView userImage = (ImageView) navHeader.findViewById(R.id.userImageView);
-        userImage.setImageBitmap(decodedBitmapOfImage);
+            ImageView userImage = (ImageView) navHeader.findViewById(R.id.userImageView);
+            userImage.setImageBitmap(decodedBitmapOfImage);
+        }
+
         // set user name and email
         userNameShow = (TextView) navHeader.findViewById(R.id.UserNameTextView);
         userEmailShow=(TextView)navHeader.findViewById(R.id.UserEmailTextView);
@@ -284,6 +287,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                         SharedPreferences.Editor clearUserData = storeInput.edit();
                         clearUserData.remove("user_password");
                         clearUserData.remove("user_email");
+                        clearUserData.remove("encoded_image");
                         clearUserData.commit();
 
                         Intent logout = new Intent(Home.this,MainActivity.class);

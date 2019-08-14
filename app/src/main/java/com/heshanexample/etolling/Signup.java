@@ -110,20 +110,18 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                 if(passwordValidation()&& EmailValidation()){
                     Toast.makeText(getBaseContext(),"User Data Downloading...",Toast.LENGTH_LONG).show();
 
-                    Retrofit retro = new Retrofit.Builder().baseUrl("https://api.myjson.com/bins/").addConverterFactory(GsonConverterFactory.create())
+                    Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").addConverterFactory(GsonConverterFactory.create())
                             .build();
 
                     jsonSignInApi = retro.create(JsonSignInApi.class);
 
-                    //......................delete this later
-                    Call<PostSignIn> call = jsonSignInApi.getPosts();
 
                     final String encriptPassword = encrypt(password);
                     final String encriptEmail    = encrypt(emailAddress);
 
-                    PostSignIn post = new PostSignIn(encriptEmail,encriptPassword);
+                    PostSignIn post = new PostSignIn(emailAddress,password);
                     //........................uncomment this..later..............
-                    //Call<PostSignIn> call = jsonSignInApi.createPost(post);
+                    Call<PostSignIn> call = jsonSignInApi.createPost(post);
 
 
 
@@ -131,93 +129,85 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                         @Override
                         public void onResponse(Call<PostSignIn> call, Response<PostSignIn> response) {
                             if(!response.isSuccessful()){
-                                Toast.makeText(getBaseContext(),"Server is busy",Toast.LENGTH_LONG).show();
-                                getEmail.setText("code : "+response.code());
-
-                                //uncomment this later
-
+                                int code = response.code();
+                                getEmail.setText("response: "+code);
+                                if(code==403){
+                                    getPassword.getText().clear();
+                                    passwordValidation();
+                                }
+                                else if (code==404){
+                                    getEmail.getText().clear();
+                                    EmailValidation();
+                                }
+                                else{
+                                    getEmail.getText().clear();
+                                    getPassword.getText().clear();
+                                    passwordValidation();
+                                    EmailValidation();
+                                }
                                 return;
 
                             }
 
-                            int code = response.code();
-
-                            if(true){
-                            //if(code==302){
 
 
-                                ObjectMapper mapper = new ObjectMapper();
-                                PostSignIn signIndetails = response.body();
+                            ObjectMapper mapper = new ObjectMapper();
+                            PostSignIn signIndetails = response.body();
 
-                                userFirstName = signIndetails.getFirstName();
-                                userLastName= signIndetails.getLastName();
-                                userAddress= signIndetails.getAddress();
-                                userIdNumber=signIndetails.getIdNumber();
-                                userPhoneNumber=signIndetails.getPhoneNumber();
+                            userFirstName = signIndetails.getFirstName();
+                            userLastName= signIndetails.getLastName();
+                            userAddress= signIndetails.getAddress();
+                            userIdNumber=signIndetails.getIdNumber();
+                            userPhoneNumber=signIndetails.getPhoneNumber();
 
-                                userName = userFirstName+" "+userLastName;
+                            userName = userFirstName+" "+userLastName;
 
-                                try {
-                                    String accountInString = mapper.writeValueAsString(response.body().getAccount());
-                                    account userAccount = mapper.readValue(accountInString,account.class);
-                                    accountNumber = userAccount.getAccountNo();
-                                    ownerName = userAccount.getOwnerName();
-                                    balance = userAccount.getBalance();
-                                } catch (JsonProcessingException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                                ///////////////////////////// get vehicle
-
-                                ///////////////////////////////
-                                ////image//////
-                                String encodedIm= signIndetails.getImage();
-                                String pureIm =encodedIm.substring(encodedIm.indexOf(",")  + 1);
-
-                                getEmail.getText().clear();
-                                getPassword.getText().clear();
-
-                                SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
-                                SharedPreferences.Editor edit = storeInput.edit();
-                                edit.putString("user_password",encriptPassword);
-                                edit.putString("user_email",encriptEmail);
-                                edit.putString("first_name",userFirstName);
-                                edit.putString("last_name",userLastName);
-                                edit.putString("id_number",userIdNumber);
-                                edit.putString("phone_number",userPhoneNumber);
-                                edit.putString("address",userAddress);
-                                edit.putString("account_number",accountNumber);
-                                edit.putString("owner_name",ownerName);
-                                edit.putInt("balance",balance);
-                                edit.putString("encoded_image",pureIm);
-                                edit.putString("user_name",userName);
-
-                                edit.commit();
-
-
-                                Intent goHome = new Intent(Signup.this,Home.class);
-                                goHome.putExtra("user",userName);
-                                goHome.putExtra("Email",emailAddress);
-                                startActivity(goHome);
-                                finish();
+                            try {
+                                String accountInString = mapper.writeValueAsString(response.body().getAccount());
+                                account userAccount = mapper.readValue(accountInString,account.class);
+                                accountNumber = userAccount.getAccountNo();
+                                ownerName = userAccount.getOwnerName();
+                                balance = userAccount.getBalance();
+                            } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            else if(code==403){
-                                getPassword.getText().clear();
-                                passwordValidation();
-                            }
-                            else if (code==404){
-                                getEmail.getText().clear();
-                                EmailValidation();
-                            }
-                            else{
-                                getEmail.getText().clear();
-                                getPassword.getText().clear();
-                                passwordValidation();
-                                EmailValidation();
 
-                            }
+                            ///////////////////////////// get vehicle
+
+                            ///////////////////////////////
+                            ////image//////
+                            String encodedIm= signIndetails.getImage();
+                            String pureIm =encodedIm.substring(encodedIm.indexOf(",")  + 1);
+
+                            getEmail.getText().clear();
+                            getPassword.getText().clear();
+
+                            SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
+                            SharedPreferences.Editor edit = storeInput.edit();
+                            edit.putString("user_password",encriptPassword);
+                            edit.putString("user_email",encriptEmail);
+                            edit.putString("first_name",userFirstName);
+                            edit.putString("last_name",userLastName);
+                            edit.putString("id_number",userIdNumber);
+                            edit.putString("phone_number",userPhoneNumber);
+                            edit.putString("address",userAddress);
+                            edit.putString("account_number",accountNumber);
+                            edit.putString("owner_name",ownerName);
+                            edit.putInt("balance",balance);
+                            edit.putString("encoded_image",pureIm);
+                            edit.putString("user_name",userName);
+
+                            edit.commit();
+
+
+                            Intent goHome = new Intent(Signup.this,Home.class);
+                            goHome.putExtra("user",userName);
+                            goHome.putExtra("Email",emailAddress);
+                            startActivity(goHome);
+                            finish();
+
 
                         }
 
@@ -235,12 +225,12 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                 break;
             case R.id.Register:
 
-                Intent RegisterMe = new Intent(Intent.ACTION_VIEW, Uri.parse("https://stackoverflow.com/questions/4396376/how-to-get-edittext-value-and-display-it-on-screen-through-textview/4396400"));
+                Intent RegisterMe = new Intent(Intent.ACTION_VIEW, Uri.parse("https://open-road-tolling.herokuapp.com/register"));
                 startActivity(RegisterMe);
                 break;
             case R.id.ForgetPassword:
 
-                Intent resetPassword = new Intent(Intent.ACTION_VIEW, Uri.parse("https://stackoverflow.com/questions/4396376/how-to-get-edittext-value-and-display-it-on-screen-through-textview/4396400"));
+                Intent resetPassword = new Intent(Intent.ACTION_VIEW, Uri.parse("https://open-road-tolling.herokuapp.com/register"));
                 startActivity(resetPassword);
                 break;
         }
