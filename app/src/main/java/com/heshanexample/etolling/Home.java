@@ -272,6 +272,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_profile:
+                Intent myProfile = new Intent(Home.this,Profile.class);
+                startActivity(myProfile);
                 return true;
             case R.id.action_report:
                 return true;
@@ -287,6 +289,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                         SharedPreferences.Editor clearUserData = storeInput.edit();
                         clearUserData.remove("user_password");
                         clearUserData.remove("user_email");
+                        clearUserData.remove("encoded_image");
+                        clearUserData.remove("user_name");
+                        clearUserData.remove("first_name");
+                        clearUserData.remove("last_name");
+                        clearUserData.remove("address");
+                        clearUserData.remove("id_name");
+                        clearUserData.remove("phone_number");
+                        clearUserData.remove("account_number");
+                        clearUserData.remove("owner_name");
+                        clearUserData.remove("balance");
                         clearUserData.remove("encoded_image");
                         clearUserData.commit();
 
@@ -321,6 +333,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.nav_Profile) {
             // Handle the camera action
+            Intent myProfile = new Intent(Home.this,Profile.class);
+            startActivity(myProfile);
 
         } else if (id == R.id.nav_History) {
 

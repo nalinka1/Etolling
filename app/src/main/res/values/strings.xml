@@ -18,4 +18,8 @@
     <string name="menu_share">Share</string>
     <string name="menu_Contact_Us_String">Contact Us</string>
     <string name="textLabelFont">monospace</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
