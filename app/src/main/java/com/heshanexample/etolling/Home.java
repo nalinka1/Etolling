@@ -51,7 +51,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     TextView userNameShow,userEmailShow;
     Intent main_activity;
-    String user_name,user_email;
+    String user_name,user_email,password;
 
     WifiManager wifiManager;
     TextView textView1;
@@ -69,6 +69,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private String ownerName;
     private int balance;
     private String encodedImage;
+
+    private int revisionNumber;
+
+    JsonSignInApi jsUpdate ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        // delete later
+        textView1 = (TextView)findViewById(R.id.serverResponseTextView);
+        textView2 = (TextView)findViewById(R.id.wifiListTextView);
 
 
         Toast.makeText(this, " welcome to home Page", Toast.LENGTH_LONG).show();
@@ -110,6 +117,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         accountNumber=getDetails.getString("account_number",null);
         ownerName= getDetails.getString("owner_name",null);
         balance=getDetails.getInt("balance",0);
+        revisionNumber=getDetails.getInt("revision_number",0);
+        password= getDetails.getString("user_password",null);
+
+
 
 
 // get header
@@ -139,11 +150,36 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userNameShow.setText(user_name);
         userEmailShow.setText(user_email);
 
+
+        // update user data
+
+        Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        jsUpdate = retro.create(JsonSignInApi.class);
+        getUpdate get = new getUpdate(user_email,password,revisionNumber);
+        Call<getUpdate>call = jsUpdate.getUpdates(get);
+        call.enqueue(new Callback<getUpdate>() {
+            @Override
+            public void onResponse(Call<getUpdate> call, Response<getUpdate> response) {
+                if(!response.isSuccessful()){
+                    textView1.setText(" not successful Code : "+response.code());
+                    return;
+                }
+                textView1.setText("successful Code : "+response.code());
+            }
+
+            @Override
+            public void onFailure(Call<getUpdate> call, Throwable t) {
+                textView1.setText("error : "+t.getMessage());
+
+            }
+        });
+
 ////////////////////////// wifi scanner \\\\\\\\\\\\\\\\\\\\
 
         wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
-        textView1 = (TextView)findViewById(R.id.serverResponseTextView);
-        textView2 = (TextView)findViewById(R.id.wifiListTextView);
+
 
         if (!wifiManager.isWifiEnabled()){
             wifiManager.setWifiEnabled(true);
@@ -222,7 +258,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onResponse(Call<PostWiFi> call, Response<PostWiFi> response) {
                 if (!response.isSuccessful()){
-                    textView1.setText("Code: "+response.code());
+                    //textView1.setText("Code: "+response.code());
                 }
 
                 PostWiFi postResponse = response.body();
@@ -232,12 +268,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                         content += postResponse.getSecond_name()+"\n";
                         content += postResponse.getAge()+"\n\n";*/
                 content += postResponse.getId()+"\n";
-                textView1.append(content);
+                //textView1.append(content);
             }
 
             @Override
             public void onFailure(Call<PostWiFi> call, Throwable t) {
-                textView1.setText(t.getMessage());
+                //textView1.setText(t.getMessage());
             }
         });
 
@@ -338,7 +374,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         } else if (id == R.id.nav_History) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_refresh) {
 
         } else if (id == R.id.nav_Settings) {
 

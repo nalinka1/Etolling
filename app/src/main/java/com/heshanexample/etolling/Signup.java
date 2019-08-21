@@ -52,6 +52,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     private int balance;
 
     private String userName;
+    private int revesionNumber;
 
 
 
@@ -154,11 +155,14 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             ObjectMapper mapper = new ObjectMapper();
                             PostSignIn signIndetails = response.body();
 
+                            //Log.d("tag",signIndetails.toString());
+
                             userFirstName = signIndetails.getFirstName();
                             userLastName= signIndetails.getLastName();
                             userAddress= signIndetails.getAddress();
                             userIdNumber=signIndetails.getIdNumber();
                             userPhoneNumber=signIndetails.getPhoneNumber();
+                            revesionNumber= signIndetails.getRevisionNo();
 
                             userName = userFirstName+" "+userLastName;
 
@@ -186,8 +190,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                             SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
                             SharedPreferences.Editor edit = storeInput.edit();
-                            edit.putString("user_password",encriptPassword);
-                            edit.putString("user_email",encriptEmail);
+                            edit.putString("user_password",password);
+                            edit.putString("user_email",emailAddress);
                             edit.putString("first_name",userFirstName);
                             edit.putString("last_name",userLastName);
                             edit.putString("id_number",userIdNumber);
@@ -198,6 +202,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             edit.putInt("balance",balance);
                             edit.putString("encoded_image",pureIm);
                             edit.putString("user_name",userName);
+                            edit.putInt("revision_number",revesionNumber);
 
                             edit.commit();
 

@@ -1,8 +1,10 @@
 package com.heshanexample.etolling;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -13,6 +15,8 @@ import androidx.annotation.NonNull;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,6 +38,7 @@ public class Profile extends AppCompatActivity {
     TextView profileDetails;
 
     private String userName;
+    private int revisionNo;
 
     String content;
     String contentAcc="";
@@ -52,6 +57,7 @@ public class Profile extends AppCompatActivity {
                     }
                     catch (NullPointerException e){
                         profileDetails.setText(content);
+                       // userImage.setVisibility(ImageView.VISIBLE);
                     }
                     return true;
                 case R.id.navigation_account:
@@ -61,6 +67,7 @@ public class Profile extends AppCompatActivity {
                     }
                     catch (NullPointerException e){
                         profileDetails.setText(contentAcc);
+                        //userImage.setVisibility(ImageView.INVISIBLE);
                     }
                     return true;
                 case R.id.navigation_notifications:
@@ -79,6 +86,21 @@ public class Profile extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
+
+
+        // Update Button ...........
+
+        Button updateButoon = (Button)findViewById(R.id.Update);
+        updateButoon.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Do something in response to button click
+                Intent RegisterMe = new Intent(Intent.ACTION_VIEW, Uri.parse("https://open-road-tolling.herokuapp.com/login"));
+                startActivity(RegisterMe);
+            }
+        });
+
+
+
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
 
         userFirstName = getDetails.getString("first_name",null);
@@ -90,6 +112,7 @@ public class Profile extends AppCompatActivity {
         ownerName= getDetails.getString("owner_name",null);
         balance=getDetails.getInt("balance",0);
         userName= getDetails.getString("user_name",null);
+        revisionNo=getDetails.getInt("revision_number",0);
 
         profileDetails = (TextView) findViewById(R.id.userDetails);
         profileDetails.setPadding(2,2,2,2);
@@ -100,6 +123,7 @@ public class Profile extends AppCompatActivity {
         content+= "Address  : "+ userAddress+"\n";
         content+= "Phone Number : "+userPhoneNumber+"\n";
         content+= " Id number  : "+userIdNumber+"\n";
+        content+= " revision NUmber : "+ revisionNo+"\n";
 
         contentAcc+="";
         contentAcc+="Account Number : "+accountNumber+"\n";

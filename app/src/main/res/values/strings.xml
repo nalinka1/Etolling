@@ -8,6 +8,7 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="action_profile_String">Profile</string>
+    <string name="action_refresh_String">Refresh</string>
     <string name="action_report_String">Report</string>
     <string name="action_logout_String">Logout</string>
 

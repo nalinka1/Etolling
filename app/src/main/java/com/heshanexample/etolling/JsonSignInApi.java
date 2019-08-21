@@ -9,11 +9,13 @@ import retrofit2.http.POST;
 
 public interface JsonSignInApi {
 
+
+    //user SignIn
     @POST("get_user")
     Call<PostSignIn> createPost(@Body PostSignIn post);
 
-    // delete this part later...........
-    @GET("dpi8j")
-    Call<PostSignIn> getPosts();
-    //......................................
+    //user data Update
+    @POST("update_user")
+    Call<getUpdate> getUpdates(@Body getUpdate get);
+
 }
