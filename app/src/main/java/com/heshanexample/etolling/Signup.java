@@ -22,7 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,7 +113,12 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                 if(passwordValidation()&& EmailValidation()){
                     Toast.makeText(getBaseContext(),"User Data Downloading...",Toast.LENGTH_LONG).show();
 
-                    Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").addConverterFactory(GsonConverterFactory.create())
+                    OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                            .connectTimeout(15, TimeUnit.SECONDS)
+                            .readTimeout(15, TimeUnit.SECONDS)
+                            .writeTimeout(15, TimeUnit.SECONDS)
+                            .build();
+                    Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").client(okHttpClient).addConverterFactory(GsonConverterFactory.create())
                             .build();
 
                     jsonSignInApi = retro.create(JsonSignInApi.class);

@@ -40,7 +40,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -151,9 +153,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userEmailShow.setText(user_email);
 
 
-        // update user data
+        // update user data...................................................................................................
 
-        Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").addConverterFactory(GsonConverterFactory.create())
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build();
+        Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").client(okHttpClient).addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         jsUpdate = retro.create(JsonSignInApi.class);
@@ -171,7 +178,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             @Override
             public void onFailure(Call<getUpdate> call, Throwable t) {
-                textView1.setText("error : "+t.getMessage());
+                Intent noInternet = new Intent(Home.this,InternetFailure.class);
+                startActivity(noInternet);
+                finish();
+
 
             }
         });
