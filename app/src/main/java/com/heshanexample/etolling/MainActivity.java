@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
     Intent Home,signUp;
     String Encript_email,Encript_password,password;
     public String email;
-    public String User_Name ;
 
     // https response for sign In details variables
 
@@ -29,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
-        Encript_email = getDetails.getString("user_email",null);
-        Encript_password= getDetails.getString("user_password",null);
+        email = getDetails.getString("user_email",null);
+        password= getDetails.getString("user_password",null);
 
 
-        if(Encript_email==null){
+        if(email==null){
 
             signUp = new Intent(MainActivity.this,Signup.class);
             startActivity(signUp);
@@ -42,13 +41,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
 
-            email = decrypt(Encript_email);
-            password = decrypt(Encript_password);
-
-
             Home = new Intent(MainActivity.this,Home.class);
-            Home.putExtra("Email",email);
-            Home.putExtra("user",User_Name);
             startActivity(Home);
             finish();
         }

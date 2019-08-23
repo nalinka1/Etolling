@@ -14,6 +14,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -39,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -121,6 +124,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         balance=getDetails.getInt("balance",0);
         revisionNumber=getDetails.getInt("revision_number",0);
         password= getDetails.getString("user_password",null);
+        user_email = getDetails.getString("user_email",null);
 
 
 
@@ -144,9 +148,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userNameShow = (TextView) navHeader.findViewById(R.id.UserNameTextView);
         userEmailShow=(TextView)navHeader.findViewById(R.id.UserEmailTextView);
 
-        main_activity=getIntent();
-        user_name = main_activity.getStringExtra("user");
-        user_email = main_activity.getStringExtra("Email");
         user_name=userFirstName+" "+userLastName;
 
         userNameShow.setText(user_name);
@@ -173,7 +174,68 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     textView1.setText(" not successful Code : "+response.code());
                     return;
                 }
-                textView1.setText("successful Code : "+response.code());
+                int updateCode = response.code();
+                if(updateCode== 200){
+                    ObjectMapper mapper = new ObjectMapper();
+                    getUpdate signIndetails = response.body();
+
+                    //Log.d("tag",signIndetails.toString());
+
+                    userFirstName = signIndetails.getFirstName();
+                    userLastName= signIndetails.getLastName();
+                    userAddress= signIndetails.getAddress();
+                    userIdNumber=signIndetails.getIdNumber();
+                    userPhoneNumber=signIndetails.getPhoneNumber();
+                    revisionNumber= signIndetails.getRevisionNo();
+
+                    user_name = userFirstName+" "+userLastName;
+
+                    try {
+                        String accountInString = mapper.writeValueAsString(response.body().getAccount());
+                        account userAccount = mapper.readValue(accountInString,account.class);
+                        accountNumber = userAccount.getAccountNo();
+                        ownerName = userAccount.getOwnerName();
+                        balance = userAccount.getBalance();
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    ///////////////////////////// get vehicle
+
+                    ///////////////////////////////
+                    ////image//////
+                    String encodedIm= signIndetails.getImage();
+                    String pureIm =encodedIm.substring(encodedIm.indexOf(",")  + 1);
+
+
+                    SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
+                    SharedPreferences.Editor edit = storeInput.edit();
+                    edit.putString("user_password",password);
+                    edit.putString("user_email",user_email);
+                    edit.putString("first_name",userFirstName);
+                    edit.putString("last_name",userLastName);
+                    edit.putString("id_number",userIdNumber);
+                    edit.putString("phone_number",userPhoneNumber);
+                    edit.putString("address",userAddress);
+                    edit.putString("account_number",accountNumber);
+                    edit.putString("owner_name",ownerName);
+                    edit.putInt("balance",balance);
+                    edit.putString("encoded_image",pureIm);
+                    edit.putString("user_name",user_name);
+                    edit.putInt("revision_number",revisionNumber);
+
+                    edit.commit();
+                    textView1.setText(" not successful Code : "+response.code());
+                    textView1.append("\n updated..");
+
+                }
+                else{
+                    textView1.setText("nothing changed");
+
+                }
+
             }
 
             @Override
