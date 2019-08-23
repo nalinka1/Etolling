@@ -111,48 +111,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //get Navigation view
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        // get saved data in the app
 
-        SharedPreferences getDetails = getSharedPreferences("UserData",0);
-        userFirstName = getDetails.getString("first_name",null);
-        userLastName = getDetails.getString("last_name",null);
-        userAddress = getDetails.getString("address",null);
-        userIdNumber=getDetails.getString("id_number",null);
-        userPhoneNumber= getDetails.getString("phone_number",null);
-        accountNumber=getDetails.getString("account_number",null);
-        ownerName= getDetails.getString("owner_name",null);
-        balance=getDetails.getInt("balance",0);
-        revisionNumber=getDetails.getInt("revision_number",0);
-        password= getDetails.getString("user_password",null);
-        user_email = getDetails.getString("user_email",null);
-
-
-
-
-// get header
-        View navHeader = navigationView.getHeaderView(0);
-
-
-        // set image .....
-        String pureIm =getDetails.getString("encoded_image",null);
-        if(pureIm.length()>20){
-            final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
-            Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-
-
-            ImageView userImage = (ImageView) navHeader.findViewById(R.id.userImageView);
-            userImage.setImageBitmap(decodedBitmapOfImage);
-        }
-
-        // set user name and email
-        userNameShow = (TextView) navHeader.findViewById(R.id.UserNameTextView);
-        userEmailShow=(TextView)navHeader.findViewById(R.id.UserEmailTextView);
-
-        user_name=userFirstName+" "+userLastName;
-
-        userNameShow.setText(user_name);
-        userEmailShow.setText(user_email);
-
+        //Get pre variable for update paramenters
+        SharedPreferences getup = getSharedPreferences("UserData",0);
+        revisionNumber=getup.getInt("revision_number",0);
+        password= getup.getString("user_password",null);
+        user_email = getup.getString("user_email",null);
 
         // update user data...................................................................................................
 
@@ -227,7 +191,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     edit.putInt("revision_number",revisionNumber);
 
                     edit.commit();
-                    textView1.setText(" not successful Code : "+response.code());
+                    textView1.setText("successful Code : "+response.code());
                     textView1.append("\n updated..");
 
                 }
@@ -247,6 +211,51 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             }
         });
+
+        // get saved data in the app
+
+        SharedPreferences getDetails = getSharedPreferences("UserData",0);
+        userFirstName = getDetails.getString("first_name",null);
+        userLastName = getDetails.getString("last_name",null);
+        userAddress = getDetails.getString("address",null);
+        userIdNumber=getDetails.getString("id_number",null);
+        userPhoneNumber= getDetails.getString("phone_number",null);
+        accountNumber=getDetails.getString("account_number",null);
+        ownerName= getDetails.getString("owner_name",null);
+        balance=getDetails.getInt("balance",0);
+        revisionNumber=getDetails.getInt("revision_number",0);
+        password= getDetails.getString("user_password",null);
+        user_email = getDetails.getString("user_email",null);
+
+
+
+
+// get header
+        View navHeader = navigationView.getHeaderView(0);
+
+
+        // set image .....
+        String pureIm =getDetails.getString("encoded_image",null);
+        if(pureIm.length()>20){
+            final byte[] decodedBytes = Base64.decode(pureIm, Base64.DEFAULT);
+            Bitmap decodedBitmapOfImage = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
+
+            ImageView userImage = (ImageView) navHeader.findViewById(R.id.userImageView);
+            userImage.setImageBitmap(decodedBitmapOfImage);
+        }
+
+        // set user name and email
+        userNameShow = (TextView) navHeader.findViewById(R.id.UserNameTextView);
+        userEmailShow=(TextView)navHeader.findViewById(R.id.UserEmailTextView);
+
+        user_name = userFirstName+" "+userLastName;
+
+        userNameShow.setText(user_name);
+        userEmailShow.setText(user_email);
+
+
+
 
 ////////////////////////// wifi scanner \\\\\\\\\\\\\\\\\\\\
 
