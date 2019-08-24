@@ -72,7 +72,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private String userPhoneNumber;
     private String accountNumber;
     private String ownerName;
-    private int balance;
+    private float balance;
     private String encodedImage;
 
     private int revisionNumber;
@@ -112,106 +112,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
 
-        //Get pre variable for update paramenters
-        SharedPreferences getup = getSharedPreferences("UserData",0);
-        revisionNumber=getup.getInt("revision_number",0);
-        password= getup.getString("user_password",null);
-        user_email = getup.getString("user_email",null);
-
-        // update user data...................................................................................................
-
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .build();
-        Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").client(okHttpClient).addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        jsUpdate = retro.create(JsonSignInApi.class);
-        getUpdate get = new getUpdate(user_email,password,revisionNumber);
-        Call<getUpdate>call = jsUpdate.getUpdates(get);
-        call.enqueue(new Callback<getUpdate>() {
-            @Override
-            public void onResponse(Call<getUpdate> call, Response<getUpdate> response) {
-                if(!response.isSuccessful()){
-                    textView1.setText(" not successful Code : "+response.code());
-                    return;
-                }
-                int updateCode = response.code();
-                if(updateCode== 200){
-                    ObjectMapper mapper = new ObjectMapper();
-                    getUpdate signIndetails = response.body();
-
-                    //Log.d("tag",signIndetails.toString());
-
-                    userFirstName = signIndetails.getFirstName();
-                    userLastName= signIndetails.getLastName();
-                    userAddress= signIndetails.getAddress();
-                    userIdNumber=signIndetails.getIdNumber();
-                    userPhoneNumber=signIndetails.getPhoneNumber();
-                    revisionNumber= signIndetails.getRevisionNo();
-
-                    user_name = userFirstName+" "+userLastName;
-
-                    try {
-                        String accountInString = mapper.writeValueAsString(response.body().getAccount());
-                        account userAccount = mapper.readValue(accountInString,account.class);
-                        accountNumber = userAccount.getAccountNo();
-                        ownerName = userAccount.getOwnerName();
-                        balance = userAccount.getBalance();
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    ///////////////////////////// get vehicle
-
-                    ///////////////////////////////
-                    ////image//////
-                    String encodedIm= signIndetails.getImage();
-                    String pureIm =encodedIm.substring(encodedIm.indexOf(",")  + 1);
-
-
-                    SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
-                    SharedPreferences.Editor edit = storeInput.edit();
-                    edit.putString("user_password",password);
-                    edit.putString("user_email",user_email);
-                    edit.putString("first_name",userFirstName);
-                    edit.putString("last_name",userLastName);
-                    edit.putString("id_number",userIdNumber);
-                    edit.putString("phone_number",userPhoneNumber);
-                    edit.putString("address",userAddress);
-                    edit.putString("account_number",accountNumber);
-                    edit.putString("owner_name",ownerName);
-                    edit.putInt("balance",balance);
-                    edit.putString("encoded_image",pureIm);
-                    edit.putString("user_name",user_name);
-                    edit.putInt("revision_number",revisionNumber);
-
-                    edit.commit();
-                    textView1.setText("successful Code : "+response.code());
-                    textView1.append("\n updated..");
-
-                }
-                else{
-                    textView1.setText("nothing changed");
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<getUpdate> call, Throwable t) {
-                Intent noInternet = new Intent(Home.this,InternetFailure.class);
-                startActivity(noInternet);
-                finish();
-
-
-            }
-        });
-
         // get saved data in the app
 
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
@@ -222,11 +122,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         userPhoneNumber= getDetails.getString("phone_number",null);
         accountNumber=getDetails.getString("account_number",null);
         ownerName= getDetails.getString("owner_name",null);
-        balance=getDetails.getInt("balance",0);
+        balance=getDetails.getFloat("balance",0);
         revisionNumber=getDetails.getInt("revision_number",0);
         password= getDetails.getString("user_password",null);
         user_email = getDetails.getString("user_email",null);
-
 
 
 

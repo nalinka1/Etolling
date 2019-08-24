@@ -24,6 +24,10 @@ public class getUpdate {
     private Object account;
     @SerializedName("image")
     private String image;
+    @SerializedName("balance")
+    private float balance;
+
+
 
     public getUpdate(String email, String password, int revisionNo) {
         this.email = email;
@@ -61,5 +65,8 @@ public class getUpdate {
 
     public String getImage() {
         return image;
+    }
+    public float getBalance() {
+        return balance;
     }
 }

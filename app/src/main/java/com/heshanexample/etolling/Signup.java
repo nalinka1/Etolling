@@ -51,7 +51,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     private String userPhoneNumber;
     private String accountNumber;
     private String ownerName;
-    private int balance;
+    private float balance;
 
     private String userName;
     private int revesionNumber;
@@ -206,7 +206,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             edit.putString("address",userAddress);
                             edit.putString("account_number",accountNumber);
                             edit.putString("owner_name",ownerName);
-                            edit.putInt("balance",balance);
+                            edit.putFloat("balance",balance);
                             edit.putString("encoded_image",pureIm);
                             edit.putString("user_name",userName);
                             edit.putInt("revision_number",revesionNumber);

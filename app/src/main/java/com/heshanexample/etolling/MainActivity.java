@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
 
-            Home = new Intent(MainActivity.this,Home.class);
+            Home = new Intent(MainActivity.this,updateData.class);
             startActivity(Home);
             finish();
         }

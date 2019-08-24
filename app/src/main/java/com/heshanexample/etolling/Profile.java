@@ -33,7 +33,7 @@ public class Profile extends AppCompatActivity {
     private String userPhoneNumber;
     private String accountNumber;
     private String ownerName;
-    private int balance;
+    private float balance;
 
     TextView profileDetails;
 
@@ -110,7 +110,7 @@ public class Profile extends AppCompatActivity {
         userPhoneNumber= getDetails.getString("phone_number",null);
         accountNumber=getDetails.getString("account_number",null);
         ownerName= getDetails.getString("owner_name",null);
-        balance=getDetails.getInt("balance",0);
+        balance=getDetails.getFloat("balance",00);
         userName= getDetails.getString("user_name",null);
         revisionNo=getDetails.getInt("revision_number",0);
 

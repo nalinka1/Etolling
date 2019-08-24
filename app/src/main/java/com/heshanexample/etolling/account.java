@@ -8,7 +8,7 @@ public class account {
     @SerializedName("ownerName")
     private String ownerName;
     @SerializedName("balance")
-    private int balance;
+    private float balance;
 
     public String getAccountNo() {
         return accountNo;
@@ -18,7 +18,7 @@ public class account {
         return ownerName;
     }
 
-    public int getBalance() {
+    public float getBalance() {
         return balance;
     }
 }

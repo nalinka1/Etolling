@@ -20,7 +20,7 @@ public class InternetFailure extends AppCompatActivity {
         tryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goBackToHome = new Intent(InternetFailure.this,Home.class);
+                Intent goBackToHome = new Intent(InternetFailure.this,updateData.class);
                 startActivity(goBackToHome);
             }
         });
