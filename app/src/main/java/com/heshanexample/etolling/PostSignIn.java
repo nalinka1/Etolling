@@ -25,6 +25,8 @@ public class PostSignIn {
     private String image;
     @SerializedName("revisionNo")
     private int revisionNo;
+    @SerializedName("vehicle")
+    private Object vehicle;
 
 
     public PostSignIn(String inputEmail, String inputPassword) {
@@ -62,5 +64,9 @@ public class PostSignIn {
 
     public int getRevisionNo() {
         return revisionNo;
+    }
+
+    public Object getVehicle() {
+        return vehicle;
     }
 }

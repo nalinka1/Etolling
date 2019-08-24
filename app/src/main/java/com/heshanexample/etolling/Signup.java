@@ -19,8 +19,11 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -185,7 +188,21 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 e.printStackTrace();
                             }
 
-                            ///////////////////////////// get vehicle
+                            ///////////////////////////// get vehicle ........................................
+                            getVehicle[] userVehicles = new Gson().fromJson(signIndetails.getVehicle().toString(), getVehicle[].class);
+                            ArrayList list = new ArrayList();
+                            for(getVehicle vehi : userVehicles){
+                                HashMap<String , Object> getList = new HashMap<>();
+                                getList.put("vehicleNo",vehi.getVehicleNo());
+                                getList.put("className",vehi.getClassName());
+                                list.add(getList);
+                            }
+                            SharedPreferences storeVehicle = getApplicationContext().getSharedPreferences("UserData",0);
+                            SharedPreferences.Editor edits = storeVehicle.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(list);
+                            edits.putString("vehicle", json);
+                            edits.apply();
 
                             ///////////////////////////////
                             ////image//////

@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
@@ -20,6 +22,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Profile extends AppCompatActivity {
     private TextView mTextMessage;
@@ -114,6 +120,12 @@ public class Profile extends AppCompatActivity {
         userName= getDetails.getString("user_name",null);
         revisionNo=getDetails.getInt("revision_number",0);
 
+        //get vehicle details to a list contains hashMap
+        Gson gson = new Gson();
+        String json = getDetails.getString("vehicle", null);
+        Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
+        ArrayList allVehicles =(ArrayList) gson.fromJson(json, type);
+
         profileDetails = (TextView) findViewById(R.id.userDetails);
         profileDetails.setPadding(2,2,2,2);
         content ="";
@@ -129,6 +141,11 @@ public class Profile extends AppCompatActivity {
         contentAcc+="Account Number : "+accountNumber+"\n";
         contentAcc+="Owner Name : "+ownerName+"\n";
         contentAcc+="Balance :"+balance+"\n";
+        contentAcc+="\nMy vehicles";
+        for(int i =0; i<allVehicles.size();i++){
+            HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
+            contentAcc+="\n"+a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className");
+        }
 
         profileDetails.setText(content);
         profileDetails.setGravity(Gravity.CENTER_HORIZONTAL);

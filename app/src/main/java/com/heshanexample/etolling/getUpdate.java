@@ -26,6 +26,8 @@ public class getUpdate {
     private String image;
     @SerializedName("balance")
     private float balance;
+    @SerializedName("vehicle")
+    private Object vehicle;
 
 
 
@@ -68,5 +70,9 @@ public class getUpdate {
     }
     public float getBalance() {
         return balance;
+    }
+
+    public Object getVehicle() {
+        return vehicle;
     }
 }
