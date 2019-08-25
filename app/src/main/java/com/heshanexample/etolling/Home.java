@@ -30,6 +30,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -37,11 +39,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -128,6 +136,37 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         user_email = getDetails.getString("user_email",null);
 
 
+        // get vehicle list
+        Gson gson = new Gson();
+        String json = getDetails.getString("vehicle", null);
+        Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
+        ArrayList allVehicles =(ArrayList) gson.fromJson(json, type);
+        ArrayList<String> vehicle_drop_down = new ArrayList<>();
+        for(int i =0; i<allVehicles.size();i++){
+            HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
+            vehicle_drop_down.add(a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className"));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, vehicle_drop_down);
+        Spinner vehicle_drop = (Spinner)findViewById(R.id.selectVehicle);
+        vehicle_drop.setAdapter(adapter);
+
+        // setting onselectItem listner on the vehicle adddrp menu
+        vehicle_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int vehicleIntex = parent.getSelectedItemPosition();
+                SharedPreferences storeVehiclePosition = getApplicationContext().getSharedPreferences("UserData",0);
+                SharedPreferences.Editor editPosition = storeVehiclePosition.edit();
+                editPosition.putInt("vehicle_intex",vehicleIntex);
+                editPosition.apply();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 // get header
         View navHeader = navigationView.getHeaderView(0);
@@ -172,7 +211,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         a.start();
 
     }
-
 
 
 
