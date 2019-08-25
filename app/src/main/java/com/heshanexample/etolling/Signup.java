@@ -227,6 +227,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             edit.putString("encoded_image",pureIm);
                             edit.putString("user_name",userName);
                             edit.putInt("revision_number",revesionNumber);
+                            edit.putInt("vehicle_index",0);
 
                             edit.commit();
 

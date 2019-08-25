@@ -84,6 +84,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private String encodedImage;
 
     private int revisionNumber;
+    int[] a;
 
     JsonSignInApi jsUpdate ;
 
@@ -142,9 +143,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
         ArrayList allVehicles =(ArrayList) gson.fromJson(json, type);
         ArrayList<String> vehicle_drop_down = new ArrayList<>();
+        a= new int[allVehicles.size()];
+        int alreadySelectedIndex= getDetails.getInt("vehicle_index",0);
+        a[0]=alreadySelectedIndex;
+        HashMap selectedVehicle = (HashMap)allVehicles.get(alreadySelectedIndex);
+        vehicle_drop_down.add(selectedVehicle.get("vehicleNo")+" : "+selectedVehicle.get("className"));
+        int k=1;
         for(int i =0; i<allVehicles.size();i++){
-            HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
-            vehicle_drop_down.add(a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className"));
+            if(i!=alreadySelectedIndex){
+                HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
+                vehicle_drop_down.add(a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className"));
+                a[k]=i;
+                k++;
+            }
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, vehicle_drop_down);
         Spinner vehicle_drop = (Spinner)findViewById(R.id.selectVehicle);
@@ -154,11 +165,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         vehicle_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int vehicleIntex = parent.getSelectedItemPosition();
+                int vehicleIndex = parent.getSelectedItemPosition();
                 SharedPreferences storeVehiclePosition = getApplicationContext().getSharedPreferences("UserData",0);
                 SharedPreferences.Editor editPosition = storeVehiclePosition.edit();
-                editPosition.putInt("vehicle_intex",vehicleIntex);
-                editPosition.apply();
+                editPosition.putInt("vehicle_index",a[vehicleIndex]);
+                editPosition.commit();
 
             }
 
@@ -239,9 +250,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 stringBuffer1.append(scanResult.BSSID);
                 //textView1.setText(scanResult.BSSID);
 
-                if (scanResult.BSSID.contains("82:ce:b9:92:fa:c3")){
+                if (scanResult.BSSID.contains("d8:b0:4c:c5:51:e4")){
                     //textView1.setText("Scaned Ishan");
-                    Toast.makeText(Home.this,"Scanned Ishan",Toast.LENGTH_LONG).show();
+                    Toast.makeText(Home.this,"Scanned AP",Toast.LENGTH_LONG).show();
                 }
                 else {
                     //textView1.setText("scanning");
