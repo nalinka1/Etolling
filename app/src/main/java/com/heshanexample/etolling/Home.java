@@ -83,6 +83,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     String last_trip_ap_time = "";
     String TGAP_MacAddress;
 
+    private String highwayStatus = "Away from the High way";
+    private String entranceGate ="--";
+    private String entranceTime ="--";
+    private String exitGate ="--";
+    private String exitTime="--";
     String MacListString;
     // user data
 
@@ -118,6 +123,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onClick(View view) {
                 Intent showCurrent = new Intent(Home.this,showCurrentData.class);
+                showCurrent.putExtra("highway_status",highwayStatus);
+                showCurrent.putExtra("entrance_gate",entranceGate);
+                showCurrent.putExtra("entrance_time",entranceTime);
+                showCurrent.putExtra("exit_gate",exitGate);
+                showCurrent.putExtra("exit_time",exitTime);
                 startActivity(showCurrent);
 
             }
@@ -395,6 +405,7 @@ class MyBroadcasrReceiver extends BroadcastReceiver {
                         Date currentTime = Calendar.getInstance().getTime();
                         if ((currentTime.getTime()-Long.parseLong(received_Ap.get(received_Ap.size()-1)))>exit_timeout){
                             textView3.setText("Thank You. Come Again.");
+                            highwayStatus= "out side the high way ";
                             prev_ap="";
                             vehicleDetails.setStatus(false);
                             vehicleDetails.setExit_gate(temp1[0]);
@@ -444,15 +455,22 @@ class MyBroadcasrReceiver extends BroadcastReceiver {
                 prev_ap="";
             }*/
 
-        String HWS = "None";
         if(vehicleDetails.getStatus().booleanValue()){
-            HWS="Entered";
+            highwayStatus="Entered";
         }
-        textView21.setText(HWS);
-        textView22.setText(vehicleDetails.getEntrance_gate());
-        textView23.setText(convMillToDate(vehicleDetails.getEntrance_time()));
-        textView24.setText(vehicleDetails.getExit_gate());
-        textView25.setText(convMillToDate(vehicleDetails.getExit_time()));
+        entranceGate = vehicleDetails.getEntrance_gate();
+        entranceTime = convMillToDate(vehicleDetails.getEntrance_time());
+        exitGate = vehicleDetails.getExit_gate();
+        exitTime = convMillToDate(vehicleDetails.getExit_time());
+
+        textView21.setText(highwayStatus);
+        textView22.setText(entranceGate);
+        textView23.setText(entranceTime);
+        textView24.setText(exitGate);
+        textView25.setText(exitTime);
+
+
+
 
             /*textView2.setText("Highway status :"+"\t"+HWS+"\n"+"Entrance gate :"+"\t"+vehicleDetails.getEntrance_gate()+"\n"+"Entrance time :"+"\t"+convMillToDate(vehicleDetails.getEntrance_time())
                     +"\n"+"Exit gate :"+"\t"+vehicleDetails.getExit_gate()+"\n"+"Exit time :"+"\t"+convMillToDate(vehicleDetails.getExit_time()));*/
@@ -466,9 +484,9 @@ class MyBroadcasrReceiver extends BroadcastReceiver {
 public class vehicleDetails{
     Boolean status = false;
     String direction = "none";
-    String entrance_gate = "none";
+    String entrance_gate = "---";
     String entrance_time = "none";
-    String exit_gate = "none";
+    String exit_gate = "---";
     String exit_time = "none";
     Boolean timeout = false;
 
@@ -576,7 +594,7 @@ public class vehicleDetails{
     }
     public String convMillToDate(String millTime){
         if(millTime == "none"){
-            return "not set";
+            return "---";
         }
         else{
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");

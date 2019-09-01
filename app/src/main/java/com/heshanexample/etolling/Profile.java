@@ -46,9 +46,23 @@ public class Profile extends AppCompatActivity {
     private String userName;
     private int revisionNo;
 
-    String content;
-    String contentAcc="";
 
+    //textView variable
+     TextView text1;
+     TextView text2;
+     TextView text3;
+     TextView text4;
+     TextView text5;
+     TextView text6;
+     TextView text7;
+
+     TextView textshow1;
+     TextView textshow2;
+     TextView textshow3;
+     TextView textshow4;
+     TextView textshow5;
+     TextView textshow6;
+     TextView textshow7;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,24 +73,86 @@ public class Profile extends AppCompatActivity {
                 case R.id.navigation_info:
                     try {
                         userImage.setImageBitmap(decodedBitmapOfImage);
-                        profileDetails.setText(content);
+                        text1.setText("User Name");
+                        text2.setText("First Name");
+                        text3.setText("Last Name");
+                        text4.setText("Phone Number");
+                        text5.setText("Id Number");
+                        text6.setText("Revision Number");
+                        text7.setText("Address");
+
+                        textshow1.setText(" : "+userName);
+                        textshow2.setText(" : "+userFirstName);
+                        textshow3.setText(" : "+userLastName);
+                        textshow4.setText(" : "+userPhoneNumber);
+                        textshow5.setText(" : "+userIdNumber);
+                        textshow6.setText(" : "+Integer.toString(revisionNo));
+                        textshow7.setText(" : "+userAddress);
                     }
                     catch (NullPointerException e){
-                        profileDetails.setText(content);
-                       // userImage.setVisibility(ImageView.VISIBLE);
+                        text1.setText("User Name");
+                        text2.setText("First Name");
+                        text3.setText("Last Name");
+                        text4.setText("Phone Number");
+                        text5.setText("Id Number");
+                        text6.setText("Revision Number");
+                        text7.setText("Address");
+
+                        textshow1.setText(" : "+userName);
+                        textshow2.setText(" : "+userFirstName);
+                        textshow3.setText(" : "+userLastName);
+                        textshow4.setText(" : "+userPhoneNumber);
+                        textshow5.setText(" : "+userIdNumber);
+                        textshow6.setText(" : "+Integer.toString(revisionNo));
+                        textshow7.setText(" : "+userAddress);
                     }
                     return true;
                 case R.id.navigation_account:
                     try {
-                        userImage.setImageResource(0);
-                        profileDetails.setText(contentAcc);
+                        userImage.setImageBitmap(decodedBitmapOfImage);
+                        text1.setText("Owner Name");
+                        text2.setText("Account Number");
+                        text3.setText("Balance");
+                        text4.setText("");
+                        text5.setText("");
+                        text6.setText("");
+                        text7.setText("");
+
+                        textshow1.setText(" : "+ownerName);
+                        textshow2.setText(" : "+accountNumber);
+                        textshow3.setText(" : "+Double.toString(balance));
+                        textshow4.setText("");
+                        textshow5.setText("");
+                        textshow6.setText("");
+                        textshow7.setText("");
                     }
                     catch (NullPointerException e){
-                        profileDetails.setText(contentAcc);
-                        //userImage.setVisibility(ImageView.INVISIBLE);
+                        userImage.setImageBitmap(decodedBitmapOfImage);
+                        text1.setText("Owner Name");
+                        text2.setText("Account Number");
+                        text3.setText("Balance");
+                        text4.setText("");
+                        text5.setText("");
+                        text6.setText("");
+                        text7.setText("");
+
+                        textshow1.setText(" : "+ownerName);
+                        textshow2.setText(" : "+accountNumber);
+                        textshow3.setText(" : "+Double.toString(balance));
+                        textshow4.setText("");
+                        textshow5.setText("");
+                        textshow6.setText("");
+                        textshow7.setText("");
                     }
                     return true;
                 case R.id.navigation_notifications:
+                    try {
+                        userImage.setImageResource(0);
+
+                    }
+                    catch (NullPointerException e){
+
+                    }
                     return true;
             }
             return false;
@@ -126,29 +202,43 @@ public class Profile extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
         ArrayList allVehicles =(ArrayList) gson.fromJson(json, type);
 
-        profileDetails = (TextView) findViewById(R.id.userDetails);
-        profileDetails.setPadding(2,2,2,2);
-        content ="";
-        content+= "User Name    : "+userName+"\n";
-        content+= "First Name   : "+userFirstName+"\n";
-        content+= "Last Name    : "+userLastName+"\n";
-        content+= "Address  : "+ userAddress+"\n";
-        content+= "Phone Number : "+userPhoneNumber+"\n";
-        content+= " Id number  : "+userIdNumber+"\n";
-        content+= " revision NUmber : "+ revisionNo+"\n";
+        text1 = findViewById(R.id.tx1);
+        text2 = findViewById(R.id.tx2);
+        text3 = findViewById(R.id.tx3);
+        text4 = findViewById(R.id.tx4);
+        text5 = findViewById(R.id.tx5);
+        text6 = findViewById(R.id.tx6);
+        text7 = findViewById(R.id.tx7);
 
-        contentAcc+="";
-        contentAcc+="Account Number : "+accountNumber+"\n";
-        contentAcc+="Owner Name : "+ownerName+"\n";
-        contentAcc+="Balance :"+balance+"\n";
-        contentAcc+="\nMy vehicles";
+        textshow1 = findViewById(R.id.txshow1);
+        textshow2 = findViewById(R.id.txshow2);
+        textshow3 = findViewById(R.id.txshow3);
+        textshow4 = findViewById(R.id.txshow4);
+        textshow5 = findViewById(R.id.txshow5);
+        textshow6 = findViewById(R.id.txshow6);
+        textshow7 = findViewById(R.id.txshow7);
+
+        text1.setText("User Name");
+        text2.setText("First Name");
+        text3.setText("Last Name");
+        text4.setText("Phone Number");
+        text5.setText("Id Number");
+        text6.setText("Revision Number");
+        text7.setText("Address");
+
+        textshow1.setText(" : "+userName);
+        textshow2.setText(" : "+userFirstName);
+        textshow3.setText(" : "+userLastName);
+        textshow4.setText(" : "+userPhoneNumber);
+        textshow5.setText(" : "+userIdNumber);
+        textshow6.setText(" : "+Integer.toString(revisionNo));
+        textshow7.setText(" : "+userAddress);
+
         for(int i =0; i<allVehicles.size();i++){
             HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
-            contentAcc+="\n"+a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className");
+            //contentAcc+="\n"+a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className");
         }
 
-        profileDetails.setText(content);
-        profileDetails.setGravity(Gravity.CENTER_HORIZONTAL);
 
         String pureIm =getDetails.getString("encoded_image",null);
         if(pureIm.length()>20){
