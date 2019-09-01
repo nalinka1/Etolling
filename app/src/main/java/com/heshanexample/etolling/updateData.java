@@ -40,6 +40,7 @@ public class updateData extends AppCompatActivity {
     private String user_name;
 
 
+
     JsonSignInApi jsUpdate ;
 
     @Override
@@ -135,6 +136,8 @@ public class updateData extends AppCompatActivity {
                     edit.putString("encoded_image",pureIm);
                     edit.putString("user_name",user_name);
                     edit.putInt("revision_number",revisionNumber);
+                    edit.putString("lat",Double.toString(0.0));
+                    edit.putString("lon",Double.toString(0.0));
 
                     edit.commit();
 
@@ -148,7 +151,7 @@ public class updateData extends AppCompatActivity {
 
                 }
                 // calling home page if all are ok
-                Intent home = new Intent(updateData.this,Home.class);
+                Intent home = new Intent(updateData.this,updateMacList.class);
                 startActivity(home);
                 finish();
 

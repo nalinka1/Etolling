@@ -1,7 +1,6 @@
 package com.heshanexample.etolling;
 
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,36 +8,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.GravityCompat;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-
-import android.view.MenuItem;
-
-import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -46,31 +22,68 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     TextView userNameShow,userEmailShow;
     Intent main_activity;
     String user_name,user_email,password;
 
     WifiManager wifiManager;
-    TextView textView1;
-    TextView textView2;
+
+    //wifi data
+
+    TextView textView3;
+
+    TextView textView21;
+    TextView textView22;
+    TextView textView23;
+    TextView textView24;
+    TextView textView25;
 
 
+    String[] macAddressList;
+    //String[] macAddressList = {"50:04:b8:17:6d:85","50:04:b8:17:6d:09","82:ce:b9:92:fa:c3"};
+    List<String> received_Ap = new ArrayList<String>();
+    String prev_ap="";
+    String ap_recieved_time;
+    String ap;
+    boolean new_ap;
+    vehicleDetails vehicleDetails = new vehicleDetails();
+    boolean has_pre_app = false;
+    int entrance_timeout = 60000;
+    int exit_timeout = 60000;
+    String last_trip_ap = "";
+    String last_trip_ap_time = "";
+    String TGAP_MacAddress;
+
+    String MacListString;
     // user data
 
     private String userFirstName;
@@ -88,18 +101,25 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     JsonSignInApi jsUpdate ;
 
+    private boolean checkLoc=false;
+    //TextView myDistance;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // set event in snacBar
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent showCurrent = new Intent(Home.this,showCurrentData.class);
+                startActivity(showCurrent);
+
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -110,15 +130,31 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        // delete later
-        textView1 = (TextView)findViewById(R.id.serverResponseTextView);
-        textView2 = (TextView)findViewById(R.id.wifiListTextView);
 
+        // wifi ..............ishan..
+        Bundle extras = getIntent().getExtras();
+        if(extras!= null){
+            MacListString = extras.getString("macAddressListB");
+        }
+        macAddressList = MacListString.split("\n");
+        textView3 = (TextView)findViewById(R.id.textView3);
+        //textView3.setText(MacListString);
+        textView21 = (TextView)findViewById(R.id.highwayStatus);
+        textView22 = (TextView)findViewById(R.id.entranceGate);
+        textView23 = (TextView)findViewById(R.id.entranceTime);
+        textView24 = (TextView)findViewById(R.id.exitGate);
+        textView25 = (TextView)findViewById(R.id.exitTime);
+
+        ///////////////////////////
 
         Toast.makeText(this, " welcome to home Page", Toast.LENGTH_LONG).show();
 
         //get Navigation view
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+
+
 
 
         // get saved data in the app
@@ -205,64 +241,294 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
 
-
 ////////////////////////// wifi scanner \\\\\\\\\\\\\\\\\\\\
 
-        wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
+    wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
 
 
         if (!wifiManager.isWifiEnabled()){
-            wifiManager.setWifiEnabled(true);
-            //textView1.setText("WiFi is ON");
-        }
-        MyBroadcasrReceiver myBroadcasrReceiver = new MyBroadcasrReceiver();
-        registerReceiver(myBroadcasrReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.setWifiEnabled(true);
+        //textView1.setText("WiFi is ON");
+    }
+    MyBroadcasrReceiver myBroadcasrReceiver = new MyBroadcasrReceiver();
+    registerReceiver(myBroadcasrReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifiManager.startScan();
-        loop a = new loop();
+    loop a = new loop();
         a.start();
 
-    }
+}
 
 
 
-    class loop extends Thread{
-        public void run(){
-            while (true){
-                wifiManager.startScan();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+class loop extends Thread{
+    public void run(){
+        while (true){
+            wifiManager.startScan();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
+}
 
-    class MyBroadcasrReceiver extends BroadcastReceiver {
+class MyBroadcasrReceiver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            StringBuffer stringBuffer = new StringBuffer();
-            StringBuffer stringBuffer1 = new StringBuffer();
-            List<ScanResult> list = wifiManager.getScanResults();
-            for(ScanResult scanResult:list){
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        StringBuffer stringBuffer = new StringBuffer();
+        StringBuffer stringBuffer1 = new StringBuffer();
+        List<ScanResult> list = wifiManager.getScanResults();
+        Boolean setPrevAP = false;
+
+        ////////////// to get mac address list /////////////////////////////
+            /*for(ScanResult scanResult:list){
                 stringBuffer.append(scanResult.SSID+"\n"+scanResult.BSSID+"\n"+"\n");
                 stringBuffer1.append(scanResult.BSSID);
                 //textView1.setText(scanResult.BSSID);
 
-                if (scanResult.BSSID.contains("d8:b0:4c:c5:51:e4")){
+                if (scanResult.BSSID.contains("82:ce:b9:92:fa:c3")){
                     //textView1.setText("Scaned Ishan");
-                    Toast.makeText(Home.this,"Scanned AP",Toast.LENGTH_LONG).show();
+                    Toast.makeText(Home.this,"Scanned Ishan",Toast.LENGTH_LONG).show();
                 }
                 else {
                     //textView1.setText("scanning");
                 }
-            }
-            textView2.setText(stringBuffer);
-            PostWiFiMethod("asdf","qwer.com",stringBuffer);
+            }*/
+        /////////////  to get highway status  //////////////////////////////
+        for(ScanResult scanResult:list){
+            stringBuffer.append(scanResult.SSID+"\n"+scanResult.BSSID+"\n"+"\n");
 
+            for (String macID :macAddressList){
+
+                if (scanResult.BSSID.contains(macID/*macID.toString*/)){
+                    Toast.makeText(Home.this,"AP Found",Toast.LENGTH_SHORT).show();
+                    setPrevAP=true;
+                    /////////////////adayage algorithm eka//////////////////
+                    ap = scanResult.SSID;
+                    if (!scanResult.BSSID.equals(prev_ap)){
+                        prev_ap = scanResult.BSSID;
+                        ap = scanResult.SSID;
+                        new_ap =true;
+                        Date currentTime = Calendar.getInstance().getTime();
+                        ap_recieved_time = String.valueOf(currentTime.getTime());
+                    }
+
+                }
+            }
+            if (new_ap){
+                if (vehicleDetails.getStatus().booleanValue()){
+                    if (!received_Ap.get(received_Ap.size()-2).equals(ap)){
+                        String[] temp1 = ap.split("_");
+                        String[] temp2 = received_Ap.get(received_Ap.size()-2).split("_");
+                        if (temp1[0].equals(temp2[0])){
+                            if (temp1[1].equals("TGAP")){
+                                textView3.setText("Decision Pending");
+                                vehicleDetails.setTimeout(true);
+                                received_Ap.add(ap);
+                                received_Ap.add(ap_recieved_time);
+                                TGAP_MacAddress=scanResult.BSSID;
+                            }
+                            else {
+                                String direct = "";
+                                vehicleDetails.setTimeout(false);
+                                textView3.setText("Continue on the highway");
+                                TGAP_MacAddress="";
+                                if (temp1[1].equals("SAP1") && temp2[1].equals("SAP2")){
+                                    direct = "UP";
+                                }
+                                else{
+                                    direct = "DOWN";
+                                }
+                            }
+                        }
+                        else if(ap.contains("SAP")){
+                            received_Ap.add(ap);
+                            received_Ap.add(ap_recieved_time);
+                        }
+
+                    }
+                }
+                else {
+                    if (has_pre_app){
+                        String test1 = received_Ap.get(received_Ap.size()-2);
+                        if (!received_Ap.get(received_Ap.size()-2).equals(ap)){
+                            String[] temp1 = ap.split("_");
+                            String[] temp2 = received_Ap.get(received_Ap.size()-2).split("_");
+                            textView3.setText("Welcome to the Highway");
+                            vehicleDetails.setStatus(true);
+                            vehicleDetails.setEntrance_gate(temp2[0]);
+                            vehicleDetails.setEntrance_time(received_Ap.get(received_Ap.size()-1));
+                            TGAP_MacAddress="";
+
+                            if (temp1[1].equals("SAP1")){
+                                vehicleDetails.setDirection("UP");
+                            }
+                            else if(temp1[1].equals("SAP2")){
+                                vehicleDetails.setDirection("DOWN");
+                            }
+                            new_ap = false;
+                            vehicleDetails.setTimeout(false);
+                        }
+                    }
+                    else if(ap.contains("TGAP")){
+                        received_Ap.add(ap);
+                        received_Ap.add(ap_recieved_time);
+                        has_pre_app=true;
+                        vehicleDetails.setTimeout(true);
+                        TGAP_MacAddress=scanResult.BSSID;
+
+                    }
+                    else{
+                        new_ap =false;
+                    }
+                }
+                new_ap =false;
+            }
+            else{
+                if(vehicleDetails.getStatus().booleanValue()){
+                    if (vehicleDetails.getTimeout().booleanValue()){
+                        String[] temp1 = ap.split("_");
+                        String[] temp2 = received_Ap.get(received_Ap.size()-2).split("_");
+                        Date currentTime = Calendar.getInstance().getTime();
+                        if ((currentTime.getTime()-Long.parseLong(received_Ap.get(received_Ap.size()-1)))>exit_timeout){
+                            textView3.setText("Thank You. Come Again.");
+                            prev_ap="";
+                            vehicleDetails.setStatus(false);
+                            vehicleDetails.setExit_gate(temp1[0]);
+                            vehicleDetails.setExit_time(received_Ap.get(received_Ap.size()-1));
+                            last_trip_ap = ap;
+                            last_trip_ap_time = ap_recieved_time;
+                            ap="";
+                            received_Ap.clear();
+                            ap_recieved_time = "";
+                            has_pre_app = false;
+                            new_ap = false;
+                            vehicleDetails.setTimeout(false);
+                            TGAP_MacAddress = "";
+                        }
+                    }
+                }
+                else{
+                    if (vehicleDetails.getTimeout().booleanValue()){
+                        //textView3.setText("Hee");
+                        Date currentTime = Calendar.getInstance().getTime();
+                        if ((currentTime.getTime()-Long.parseLong(received_Ap.get(received_Ap.size()-1)))>entrance_timeout){
+                            textView3.setText("just passing");
+                            has_pre_app = false;
+                            received_Ap.clear();
+                            ap_recieved_time = "";
+                            new_ap = false;
+                            vehicleDetails.setTimeout(false);
+                        }
+                    }
+                }
+            }
+
+
+            //stringBuffer1.append(scanResult.BSSID);
+            //textView1.setText(scanResult.BSSID);
+
+                /*if (scanResult.BSSID.contains("82:ce:b9:92:fa:c3")){
+                    //textView1.setText("Scaned Ishan");
+                    Toast.makeText(Home.this,"Scanned Ishan",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    //textView1.setText("scanning");
+                }*/
         }
+
+            /*if (!setPrevAP){
+                prev_ap="";
+            }*/
+
+        String HWS = "None";
+        if(vehicleDetails.getStatus().booleanValue()){
+            HWS="Entered";
+        }
+        textView21.setText(HWS);
+        textView22.setText(vehicleDetails.getEntrance_gate());
+        textView23.setText(convMillToDate(vehicleDetails.getEntrance_time()));
+        textView24.setText(vehicleDetails.getExit_gate());
+        textView25.setText(convMillToDate(vehicleDetails.getExit_time()));
+
+            /*textView2.setText("Highway status :"+"\t"+HWS+"\n"+"Entrance gate :"+"\t"+vehicleDetails.getEntrance_gate()+"\n"+"Entrance time :"+"\t"+convMillToDate(vehicleDetails.getEntrance_time())
+                    +"\n"+"Exit gate :"+"\t"+vehicleDetails.getExit_gate()+"\n"+"Exit time :"+"\t"+convMillToDate(vehicleDetails.getExit_time()));*/
+
+        //textView2.setText(stringBuffer);
+        //PostWiFiMethod("asdf","qwer.com",stringBuffer);
+
     }
+}
+
+public class vehicleDetails{
+    Boolean status = false;
+    String direction = "none";
+    String entrance_gate = "none";
+    String entrance_time = "none";
+    String exit_gate = "none";
+    String exit_time = "none";
+    Boolean timeout = false;
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    public String getEntrance_gate() {
+        return entrance_gate;
+    }
+
+    public void setEntrance_gate(String entrance_gate) {
+        this.entrance_gate = entrance_gate;
+    }
+
+    public String getEntrance_time() {
+        return entrance_time;
+    }
+
+    public void setEntrance_time(String entrance_time) {
+        this.entrance_time = entrance_time;
+    }
+
+    public String getExit_gate() {
+        return exit_gate;
+    }
+
+    public void setExit_gate(String exit_gate) {
+        this.exit_gate = exit_gate;
+    }
+
+    public String getExit_time() {
+        return exit_time;
+    }
+
+    public void setExit_time(String exit_time) {
+        this.exit_time = exit_time;
+    }
+
+    public Boolean getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Boolean timeout) {
+        this.timeout = timeout;
+    }
+}
+
 
 /////////////////////// end of wifi part \\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -306,6 +572,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
+
+    }
+    public String convMillToDate(String millTime){
+        if(millTime == "none"){
+            return "not set";
+        }
+        else{
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            String dateString = formatter.format(new Date(Long.parseLong(millTime)));
+            return dateString;
+        }
 
     }
 
@@ -404,6 +681,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_History) {
 
         } else if (id == R.id.nav_refresh) {
+            Intent refresh = new Intent(Home.this,updateData.class);
+            startActivity(refresh);
 
         } else if (id == R.id.nav_Settings) {
 
@@ -417,4 +696,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

@@ -232,9 +232,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             edit.commit();
 
 
-                            Intent goHome = new Intent(Signup.this,Home.class);
-                            goHome.putExtra("user",userName);
-                            goHome.putExtra("Email",emailAddress);
+                            Intent goHome = new Intent(Signup.this,updateData.class);
                             startActivity(goHome);
                             finish();
 

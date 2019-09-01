@@ -12,6 +12,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -43,5 +44,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 
     implementation 'com.squareup.okhttp3:okhttp:3.3.1'
+
+    implementation 'com.google.android.gms:play-services:11.8.0'
+    implementation 'com.android.support:multidex:1.0.3'
 
 }
