@@ -7,6 +7,11 @@
         android:title="@string/action_profile_String"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_vehicle"
+        android:orderInCategory="3"
+        android:title="@string/action_vehicle_String"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_Refresh"
         android:orderInCategory="3"
         android:title="@string/action_refresh_String"

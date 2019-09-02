@@ -8,12 +8,14 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="action_profile_String">Profile</string>
+    <string name="action_vehicle_String">new vehicle</string>
     <string name="action_refresh_String">Refresh</string>
     <string name="action_report_String">Report</string>
     <string name="action_logout_String">Logout</string>
 
     <string name="menu_Profile_String">Profile</string>
     <string name="menu_History_string">History</string>
+    <string name="menu_vehicle_String">new vehicle</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_Settings_String">Settings</string>
     <string name="menu_share">Share</string>

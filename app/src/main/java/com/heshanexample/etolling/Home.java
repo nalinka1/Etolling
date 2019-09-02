@@ -140,6 +140,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        //setting navigation menu item icons
+        Menu menu = navigationView.getMenu();
+        MenuItem navVehicle = menu.findItem(R.id.nav_vehicle);
+        navVehicle.setIcon(R.drawable.vehicle);
+        MenuItem navHistory = menu.findItem(R.id.nav_History);
+        navHistory.setIcon(R.drawable.history);
+        MenuItem navRefresh = menu.findItem(R.id.nav_refresh);
+        navRefresh.setIcon(R.drawable.refresh);
+        MenuItem navProfile = menu.findItem(R.id.nav_Profile);
+        navProfile.setIcon(R.drawable.user2);
 
         // wifi ..............ishan..
         Bundle extras = getIntent().getExtras();
@@ -635,7 +645,13 @@ public class vehicleDetails{
                 Intent myProfile = new Intent(Home.this,Profile.class);
                 startActivity(myProfile);
                 return true;
+            case R.id.action_vehicle:
+                return true;
             case R.id.action_report:
+                return true;
+            case  R.id.action_Refresh:
+                Intent refresh = new Intent(Home.this,updateData.class);
+                startActivity(refresh);
                 return true;
             case R.id.action_logout:
 
@@ -697,12 +713,20 @@ public class vehicleDetails{
             startActivity(myProfile);
 
         } else if (id == R.id.nav_History) {
+            Intent music = new Intent(Home.this,welcome.class);
+            music.putExtra("macAddressListB",MacListString);
+            startActivity(music);
+
+        }else if(id==R.id.nav_vehicle){
 
         } else if (id == R.id.nav_refresh) {
             Intent refresh = new Intent(Home.this,updateData.class);
             startActivity(refresh);
 
         } else if (id == R.id.nav_Settings) {
+            Intent music = new Intent(Home.this,thank.class);
+            music.putExtra("macAddressListB",MacListString);
+            startActivity(music);
 
         } else if (id == R.id.nav_share) {
 

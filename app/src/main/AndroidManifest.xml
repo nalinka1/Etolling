@@ -10,12 +10,16 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".showCurrentData"></activity>
+        <activity android:name=".thank"></activity>
+        <activity android:name=".welcome" />
+        <activity android:name=".showCurrentData" />
         <activity android:name=".updateMacList" />
         <activity android:name=".updateData" />
         <activity android:name=".InternetFailure" />
