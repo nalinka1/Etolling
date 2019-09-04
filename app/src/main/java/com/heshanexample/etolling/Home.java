@@ -83,12 +83,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     String last_trip_ap_time = "";
     String TGAP_MacAddress;
 
-    private String highwayStatus = "Away from the High way";
+    private String HIGHWAYSTATUS="";
+    private String highwayStatus = "Away";
     private String entranceGate ="--";
     private String entranceTime ="--";
     private String exitGate ="--";
     private String exitTime="--";
     String MacListString;
+    boolean checkEnter=true;
+    boolean checkExit =false;
     // user data
 
     private String userFirstName;
@@ -123,6 +126,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onClick(View view) {
                 Intent showCurrent = new Intent(Home.this,showCurrentData.class);
+                showCurrent.putExtra("HIGHWAY_STATUS",HIGHWAYSTATUS);
                 showCurrent.putExtra("highway_status",highwayStatus);
                 showCurrent.putExtra("entrance_gate",entranceGate);
                 showCurrent.putExtra("entrance_time",entranceTime);
@@ -468,6 +472,14 @@ class MyBroadcasrReceiver extends BroadcastReceiver {
         if(vehicleDetails.getStatus().booleanValue()){
             highwayStatus="Entered";
         }
+        //delete this later
+        if(checkEnter&&vehicleDetails.getStatus().booleanValue()){
+            checkEnter=false;
+            Intent music = new Intent(Home.this,welcome.class);
+            music.putExtra("macAddressListB",MacListString);
+            startActivity(music);
+        }
+        HIGHWAYSTATUS= textView3.getText().toString();
         entranceGate = vehicleDetails.getEntrance_gate();
         entranceTime = convMillToDate(vehicleDetails.getEntrance_time());
         exitGate = vehicleDetails.getExit_gate();
