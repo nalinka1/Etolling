@@ -31,6 +31,10 @@
     <item android:title="">
         <menu>
             <item
+                android:id="@+id/nav_recharge"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/menu_recharge" />
+            <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/menu_share" />

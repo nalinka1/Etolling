@@ -18,6 +18,7 @@
     <string name="menu_vehicle_String">new vehicle</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_Settings_String">Settings</string>
+    <string name="menu_recharge">Recharge</string>
     <string name="menu_share">Share</string>
     <string name="menu_Contact_Us_String">Contact Us</string>
     <string name="textLabelFont">monospace</string>

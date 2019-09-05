@@ -154,6 +154,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         navRefresh.setIcon(R.drawable.refresh);
         MenuItem navProfile = menu.findItem(R.id.nav_Profile);
         navProfile.setIcon(R.drawable.user2);
+        MenuItem navRecharge = menu.findItem(R.id.nav_recharge);
+        navRecharge.setIcon(R.drawable.recharge);
 
         // wifi ..............ishan..
         Bundle extras = getIntent().getExtras();
@@ -730,6 +732,8 @@ public class vehicleDetails{
             startActivity(music);
 
         }else if(id==R.id.nav_vehicle){
+            Intent addVehicle = new Intent(Home.this,addVehicle.class);
+            startActivity(addVehicle);
 
         } else if (id == R.id.nav_refresh) {
             Intent refresh = new Intent(Home.this,updateData.class);
@@ -739,6 +743,10 @@ public class vehicleDetails{
             Intent music = new Intent(Home.this,thank.class);
             music.putExtra("macAddressListB",MacListString);
             startActivity(music);
+
+        }else if (id == R.id.nav_recharge) {
+            Intent goRecharge = new Intent(Home.this,recharge.class);
+            startActivity(goRecharge);
 
         } else if (id == R.id.nav_share) {
 
