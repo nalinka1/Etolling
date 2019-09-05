@@ -18,4 +18,8 @@ public interface JsonSignInApi {
     @POST("update_user")
     Call<getUpdate> getUpdates(@Body getUpdate get);
 
+    //register new vehicle
+    @POST("register_vehicle")
+    Call<newVehicle> addVehicle(@Body newVehicle New);
+
 }

@@ -13,6 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class addVehicle extends AppCompatActivity {
     EditText vehicleNumber;
     EditText vehicleClass;
@@ -22,6 +31,11 @@ public class addVehicle extends AppCompatActivity {
     private String correct_password;
     private String vehicle_No;
     private String vehicle_Class;
+    private String enteredEmail;
+    private String enteredPassword;
+
+    JsonSignInApi addNewVehicle;
+
 
     Button add;
     @Override
@@ -42,19 +56,44 @@ public class addVehicle extends AppCompatActivity {
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
         correct_address = getDetails.getString("user_email",null);
         correct_password= getDetails.getString("user_password",null);
-        vehicle_No=vehicleNumber.getText().toString();
-        vehicle_Class=vehicleClass.getText().toString();
 
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vehicle_No=vehicleNumber.getText().toString();
+                vehicle_Class=vehicleClass.getText().toString();
+                enteredEmail=myEmail.getText().toString();
+                enteredPassword=myPassword.getText().toString();
                 if(passwordValidation()&& EmailValidation()){
-                    AlertDialog.Builder addVehicleConfirmation = new AlertDialog.Builder(getBaseContext());
-                    addVehicleConfirmation.setMessage("\tVehicle Details\n"+"Vehicle Number : "+vehicle_No+"\n"+"vehicle Class : "+vehicle_Class);
+                    AlertDialog.Builder addVehicleConfirmation = new AlertDialog.Builder(addVehicle.this);
+                    addVehicleConfirmation.setMessage("\n\t\tVehicle Details\n\n"+"Vehicle Number : "+vehicle_No+"\n"+"vehicle Class     : "+vehicle_Class);
                     addVehicleConfirmation.setPositiveButton("confirm", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            Retrofit retro = new Retrofit.Builder().baseUrl("https://open-road-tolling.herokuapp.com/api/").addConverterFactory(GsonConverterFactory.create())
+                                    .build();
+                            addNewVehicle = retro.create(JsonSignInApi.class);
+                            newVehicle vehicle = new newVehicle(vehicle_No,vehicle_Class,enteredEmail,enteredPassword);
+                            Call<newVehicle> call = addNewVehicle.addVehicle(vehicle);
+                            call.enqueue(new Callback<newVehicle>() {
+                                @Override
+                                public void onResponse(Call<newVehicle> call, Response<newVehicle> response) {
+                                    if(!response.isSuccessful()){
+                                        return;
+                                    }
+                                    Intent goHome = new Intent(addVehicle.this,Home.class);
+                                    startActivity(goHome);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(Call<newVehicle> call, Throwable t) {
+                                        Intent failed = new Intent(addVehicle.this,InternetFailure.class);
+                                        startActivity(failed);
+                                        finish();
+                                }
+                            });
 
                         }
                     });
@@ -62,6 +101,9 @@ public class addVehicle extends AppCompatActivity {
                     addVehicleConfirmation.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            Intent goBackToVehicle = new Intent(addVehicle.this,addVehicle.class);
+                            startActivity(goBackToVehicle);
+                            finish();
 
                         }
                     });
@@ -88,7 +130,7 @@ public class addVehicle extends AppCompatActivity {
             myEmail.setError("Field can't be empty");
             return false;
         }
-        else if(!correct_address.equals(myEmail)&&!Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()){
+        else if(!correct_address.equals(enteredEmail)&&!Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()){
             myEmail.setError("Please Enter correct Email Address");
             return false;
         }
@@ -105,7 +147,7 @@ public class addVehicle extends AppCompatActivity {
             myPassword.setError("Field can't be empty");
             return false;
         }
-        else if(!myPassword.equals(correct_password)){
+        else if(!enteredPassword.equals(correct_password)){
             myPassword.setError("Please Enter correct Password");
             return false;
         }
