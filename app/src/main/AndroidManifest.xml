@@ -18,7 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".addVehicle"></activity>
+        <activity
+            android:name=".Parking"
+            android:label="@string/title_activity_parking"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Mode" />
+        <activity android:name=".addVehicle" />
         <activity android:name=".recharge" />
         <activity android:name=".thank" />
         <activity android:name=".welcome" />

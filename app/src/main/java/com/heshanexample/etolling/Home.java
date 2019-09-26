@@ -108,6 +108,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private String ownerName;
     private float balance;
     private String encodedImage;
+    private int mode_id=1;
 
     private int revisionNumber;
     int[] a;
@@ -205,9 +206,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         //get Navigation view
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-
-
 
 
 
@@ -723,6 +721,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         switch (item.getItemId()) {
             case R.id.action_profile:
                 Intent myProfile = new Intent(Home.this,Profile.class);
+                myProfile.putExtra("mode",mode_id);
                 startActivity(myProfile);
                 return true;
             case R.id.action_vehicle:
@@ -731,6 +730,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 return true;
             case  R.id.action_Refresh:
                 Intent refresh = new Intent(Home.this,updateData.class);
+                refresh.putExtra("mode",mode_id);
                 startActivity(refresh);
                 return true;
             case R.id.action_logout:
@@ -790,28 +790,36 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if (id == R.id.nav_Profile) {
             // Handle the camera action
             Intent myProfile = new Intent(Home.this,Profile.class);
+            myProfile.putExtra("mode",mode_id);
             startActivity(myProfile);
 
         } else if (id == R.id.nav_History) {
             Intent music = new Intent(Home.this,welcome.class);
             music.putExtra("macAddressListB",MacListString);
+            music.putExtra("mode",mode_id);
             startActivity(music);
 
         }else if(id==R.id.nav_vehicle){
             Intent addVehicle = new Intent(Home.this,addVehicle.class);
+            addVehicle.putExtra("mode",mode_id);
             startActivity(addVehicle);
 
         } else if (id == R.id.nav_refresh) {
             Intent refresh = new Intent(Home.this,updateData.class);
+            refresh.putExtra("check_connection",0);
+            refresh.putExtra("macAddressListB",MacListString);
+            refresh.putExtra("mode",mode_id);
             startActivity(refresh);
+            finish();
 
-        } else if (id == R.id.nav_Settings) {
-            Intent music = new Intent(Home.this,thank.class);
-            music.putExtra("macAddressListB",MacListString);
-            startActivity(music);
+        } else if (id == R.id.nav_mode) {
+            Intent change = new Intent(Home.this,Mode.class);
+            startActivity(change);
+            finish();
 
         }else if (id == R.id.nav_recharge) {
             Intent goRecharge = new Intent(Home.this,recharge.class);
+            goRecharge.putExtra("mode",mode_id);
             startActivity(goRecharge);
 
         } else if (id == R.id.nav_share) {

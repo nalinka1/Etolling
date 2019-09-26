@@ -22,4 +22,8 @@ public interface JsonSignInApi {
     @POST("register_vehicle")
     Call<newVehicle> addVehicle(@Body newVehicle New);
 
+    //recharge
+    @POST("recharge")
+    Call<topup> addPin(@Body topup newPin);
+
 }

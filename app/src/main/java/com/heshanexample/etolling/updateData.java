@@ -42,11 +42,20 @@ public class updateData extends AppCompatActivity {
 
 
     JsonSignInApi jsUpdate ;
+    private int check;
+    private int mode_id;
+    private String MacListString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_data);
+
+        // get data from previous intent
+        Bundle extras = getIntent().getExtras();
+        check = extras.getInt("check_connection",0);
+        MacListString = extras.getString("macAddressListB",null);
+        mode_id= extras.getInt("mode",1);
 
         //Get pre variable for update paramenters
         SharedPreferences getup = getSharedPreferences("UserData",0);
@@ -151,15 +160,28 @@ public class updateData extends AppCompatActivity {
 
                 }
                 // calling home page if all are ok
-                Intent home = new Intent(updateData.this,updateMacList.class);
-                startActivity(home);
-                finish();
+                //highway
+                if(mode_id==1){
+                    Intent home = new Intent(updateData.this,updateMacList.class);
+                    startActivity(home);
+                    finish();
+                }
+                // parking
+                else if(mode_id==2){
+                    Intent parking = new Intent(updateData.this, Parking.class);
+                    startActivity(parking);
+                    finish();
+                }
+
 
             }
 
             @Override
             public void onFailure(Call<getUpdate> call, Throwable t) {
+
                 Intent noInternet = new Intent(updateData.this,InternetFailure.class);
+                noInternet.putExtra("check_connection",check);
+                noInternet.putExtra("macAddressListB",MacListString);
                 startActivity(noInternet);
                 finish();
 

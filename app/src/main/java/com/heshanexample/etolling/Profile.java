@@ -192,10 +192,12 @@ public class Profile extends AppCompatActivity {
                                                 text6.setText(vehicle6.get("className").toString());
                                                 textshow6.setText(":   "+vehicle6.get("vehicleNo"));
                                                 if(vehicleCount>6){
-                                                    for(int i =6; i<allVehicles.size();i++){
-                                                        HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
-                                                        contentAcc+="\n"+a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className");
-                                                    }
+                                                    text7.setText("More vehicle");
+                                                    contentAcc="check Home selection list";
+//                                                    for(int i =6; i<allVehicles.size();i++){
+//                                                        HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
+//                                                        contentAcc+="\n"+a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className");
+//                                                    }
                                                     textshow7.setText(contentAcc);
                                                 }
                                             }

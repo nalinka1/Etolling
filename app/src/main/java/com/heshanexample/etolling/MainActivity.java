@@ -10,10 +10,11 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean goHome = false;
-    Intent Home,signUp;
-    String Encript_email,Encript_password,password;
-    public String email;
+    private boolean goHome = false;
+    private Intent Home,signUp;
+    private String Encript_email,Encript_password,password;
+    private String email;
+    private int mode_id;
 
 
     // home page
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
         email = getDetails.getString("user_email",null);
         password= getDetails.getString("user_password",null);
+        mode_id=getDetails.getInt("mode",1);
 
 
         if(email==null){
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         else{
             Home = new Intent(MainActivity.this,updateData.class);
             //Home = new Intent(MainActivity.this,Home.class);
+            Home.putExtra("check_connection",1);
+            Home.putExtra("mode",mode_id);
             startActivity(Home);
             finish();
         }

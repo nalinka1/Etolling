@@ -232,7 +232,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             edit.commit();
 
 
-                            Intent goHome = new Intent(Signup.this,updateData.class);
+                            Intent goHome = new Intent(Signup.this,Mode.class);
+                            goHome.putExtra("check_connection",1);
                             startActivity(goHome);
                             finish();
 
