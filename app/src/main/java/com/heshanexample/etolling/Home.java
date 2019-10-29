@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -89,6 +90,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private String entranceTime ="--";
     private String exitGate ="--";
     private String exitTime="--";
+    private float toll_fee = 0;
     String MacListString;
 
 
@@ -138,6 +140,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 showCurrent.putExtra("entrance_time",entranceTime);
                 showCurrent.putExtra("exit_gate",exitGate);
                 showCurrent.putExtra("exit_time",exitTime);
+                showCurrent.putExtra("toll_fee",toll_fee);
                 startActivity(showCurrent);
 
             }
@@ -248,6 +251,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, vehicle_drop_down);
         Spinner vehicle_drop = (Spinner)findViewById(R.id.selectVehicle);
         vehicle_drop.setAdapter(adapter);
+        vehicle_drop.setSelection(0, true);
+        View v = vehicle_drop.getSelectedView();
+        ((TextView)v).setTextColor(Color.YELLOW);
+        ((TextView)v).setTextSize(20);
 
         // setting onselectItem listner on the vehicle adddrp menu
         vehicle_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -257,6 +264,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 SharedPreferences storeVehiclePosition = getApplicationContext().getSharedPreferences("UserData",0);
                 SharedPreferences.Editor editPosition = storeVehiclePosition.edit();
                 editPosition.putInt("vehicle_index",a[vehicleIndex]);
+                ((TextView) view).setTextColor(Color.YELLOW);
+                ((TextView) view).setTextSize(20);
                 editPosition.commit();
 
             }
