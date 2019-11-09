@@ -1,38 +1,49 @@
 package com.heshanexample.etolling;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PostWiFi {
-    private String first_name;
-    private StringBuffer age;
-    private String second_name;
-    private int id;
+    @SerializedName("email")
+    private String email;
 
-    /*public Post(int id){
-        this.id = id;
-    }*/
+    @SerializedName("password")
+    private  String password;
 
-    public PostWiFi(String first_name, StringBuffer age, String second_name) {
-        this.first_name = first_name;
-        this.age = age;
-        this.second_name = second_name;
+    @SerializedName("time")
+    private String time;
+
+    @SerializedName("vehicleNo")
+    private String vehicleNo;
+
+    @SerializedName("macAddress")
+    private String macAddress;
+
+    @SerializedName("entrance")
+    private String entrance;
+
+    @SerializedName("exit")
+    private String exit;
+
+    @SerializedName("toll")
+    private String toll;
+
+    public PostWiFi(String email, String password, String time, String vehicleNo, String macAddress) {
+        this.email = email;
+        this.password = password;
+        this.time = time;
+        this.vehicleNo = vehicleNo;
+        this.macAddress = macAddress;
     }
 
-    public PostWiFi(int id) {
-        this.id = id;
+    public String getEntrance() {
+        return entrance;
     }
 
-    public int getId() {
-        return id;
+    public String getExit() {
+        return exit;
     }
 
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    public StringBuffer getAge() {
-        return age;
-    }
-
-    public String getSecond_name() {
-        return second_name;
+    public String getToll() {
+        return toll;
     }
 }

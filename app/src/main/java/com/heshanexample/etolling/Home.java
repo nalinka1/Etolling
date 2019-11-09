@@ -83,6 +83,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     String last_trip_ap = "";
     String last_trip_ap_time = "";
     String TGAP_MacAddress;
+    String timeStamp;
 
     private String HIGHWAYSTATUS="";
     private String highwayStatus = "Away";
@@ -114,6 +115,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private int revisionNumber;
     int[] a;
+    ArrayList allVehicles;
 
     JsonSignInApi jsUpdate ;
 
@@ -180,6 +182,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         new_ap = sharedPreferences2.getBoolean("new_ap",false);
         has_pre_app = sharedPreferences2.getBoolean("has_pre_app",false);
         TGAP_MacAddress = sharedPreferences2.getString("TGAP_macAddress",null);
+        timeStamp = sharedPreferences2.getString("timeStamp",null);
+
         vehicleDetails.setExit_time(sharedPreferences2.getString("Exit_time",null));
         vehicleDetails.setExit_gate(sharedPreferences2.getString("Exit_gate","---"));
         vehicleDetails.setTimeout(sharedPreferences2.getBoolean("Timeout",false));
@@ -232,7 +236,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Gson gson = new Gson();
         String json = getDetails.getString("vehicle", null);
         Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
-        ArrayList allVehicles =(ArrayList) gson.fromJson(json, type);
+        allVehicles =(ArrayList) gson.fromJson(json, type);
         ArrayList<String> vehicle_drop_down = new ArrayList<>();
         a= new int[allVehicles.size()];
         int alreadySelectedIndex= getDetails.getInt("vehicle_index",0);
@@ -256,6 +260,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ((TextView)v).setTextColor(Color.YELLOW);
         ((TextView)v).setTextSize(20);
 
+        ///////////////// update vehicle no /////////////////
+        HashMap currentVehicle = (HashMap)allVehicles.get(alreadySelectedIndex);
+        SharedPreferences sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences2.edit();
+        edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
+        edit.commit();
+
+
+        ////////////////////////////////////////////////////
         // setting onselectItem listner on the vehicle adddrp menu
         vehicle_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -264,6 +277,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 SharedPreferences storeVehiclePosition = getApplicationContext().getSharedPreferences("UserData",0);
                 SharedPreferences.Editor editPosition = storeVehiclePosition.edit();
                 editPosition.putInt("vehicle_index",a[vehicleIndex]);
+                //HashMap currentVehicle = (HashMap)allVehicles.get(1);
+                HashMap currentVehicle = (HashMap)allVehicles.get(vehicleIndex);
+                SharedPreferences sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = sharedPreferences2.edit();
+                edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
+                edit.commit();
                 ((TextView) view).setTextColor(Color.YELLOW);
                 ((TextView) view).setTextSize(20);
                 editPosition.commit();
@@ -394,12 +413,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                     received_Ap.add(ap);
                                     received_Ap.add(ap_recieved_time);
                                     TGAP_MacAddress=scanResult.BSSID;
+                                    timeStamp=String.valueOf(scanResult.timestamp);
                                 }
                                 else {
                                     String direct = "";
                                     vehicleDetails.setTimeout(false);
                                     textView3.setText("Continue on the highway");
-                                    TGAP_MacAddress="";
+                                    //TGAP_MacAddress="";
+                                    //timeStamp = "";
                                     if (temp1[1].equals("SAP1") && temp2[1].equals("SAP2")){
                                         direct = "UP";
                                     }
@@ -425,7 +446,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 vehicleDetails.setStatus(true);
                                 vehicleDetails.setEntrance_gate(temp2[0]);
                                 vehicleDetails.setEntrance_time(received_Ap.get(received_Ap.size()-1));
-                                TGAP_MacAddress="";
+                                //TGAP_MacAddress="";
+                                //timeStamp="";
                                 Intent music = new Intent(Home.this,welcome.class);
                                 music.putExtra("macAddressListB",MacListString);
                                 startActivity(music);
@@ -449,7 +471,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             has_pre_app=true;
                             vehicleDetails.setTimeout(true);
                             TGAP_MacAddress=scanResult.BSSID;
-
+                            timeStamp=String.valueOf(scanResult.timestamp);
                         }
                         else{
                             new_ap =false;
@@ -478,7 +500,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 has_pre_app = false;
                                 new_ap = false;
                                 vehicleDetails.setTimeout(false);
-                                TGAP_MacAddress = "";
+                                //TGAP_MacAddress = "";
+                                //timeStamp="";
                                 Intent music = new Intent(Home.this,thank.class);
                                 music.putExtra("macAddressListB",MacListString);
                                 startActivity(music);
@@ -534,11 +557,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             exitGate = vehicleDetails.getExit_gate();
             exitTime = convMillToDate(vehicleDetails.getExit_time());
 
+            sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
             textView21.setText(highwayStatus);
-            textView22.setText(entranceGate);
+            textView22.setText(sharedPreferences2.getString("entrance_gate","---"));
             textView23.setText(entranceTime);
-            textView24.setText(exitGate);
+            textView24.setText(sharedPreferences2.getString("Exit_gate","---"));
             textView25.setText(exitTime);
+
 
             sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = sharedPreferences2.edit();
@@ -549,13 +574,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             edit.putBoolean("new_ap",new_ap);
             edit.putBoolean("has_pre_app",has_pre_app);
             edit.putString("TGAP_macAddress",TGAP_MacAddress);
-            edit.putString("Exit_time",vehicleDetails.getExit_time());
-            edit.putString("Exit_gate",vehicleDetails.getExit_gate());
+            edit.putString("timeStamp",timeStamp);
+            //edit.putString("Exit_time",vehicleDetails.getExit_time());
+            //edit.putString("Exit_gate",vehicleDetails.getExit_gate());
             edit.putBoolean("Timeout",vehicleDetails.getTimeout());
             edit.putBoolean("status",vehicleDetails.getStatus());
             edit.putString("Direction",vehicleDetails.getDirection());
-            edit.putString("entrance_time",vehicleDetails.getEntrance_time());
-            edit.putString("entrance_gate",vehicleDetails.getEntrance_gate());
+            //edit.putString("entrance_time",vehicleDetails.getEntrance_time());
+            //edit.putString("entrance_gate",vehicleDetails.getEntrance_gate());
 
             edit.commit();
 
@@ -649,7 +675,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
     ////////////// POST WIFI METHOD///////////////
-    public void PostWiFiMethod(String user, String mail, StringBuffer mac){
+    /*public void PostWiFiMethod(String user, String mail, StringBuffer mac){
         String fName = user;
         String sName = mail;
         StringBuffer ag = mac;
@@ -674,9 +700,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 PostWiFi postResponse = response.body();
 
                 String content = "\n";
-                        /*content += postResponse.getFirst_name()+"\n";
+                        content += postResponse.getFirst_name()+"\n";
                         content += postResponse.getSecond_name()+"\n";
-                        content += postResponse.getAge()+"\n\n";*/
+                        content += postResponse.getAge()+"\n\n";
                 content += postResponse.getId()+"\n";
                 //textView1.append(content);
             }
@@ -688,7 +714,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         });
 
 
-    }
+    }*/
     public String convMillToDate(String millTime){
         if(millTime == null){
             return "---";
