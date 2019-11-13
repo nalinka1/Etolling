@@ -19,8 +19,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class thank extends AppCompatActivity {
-    private static int TIME_OUT=5000;
-    private Handler mHandler = new Handler();
+    private static int TIME_OUT=10000;
+    //private Handler mHandler = new Handler();
     private String MacListString;
 
     private String password;
@@ -29,7 +29,10 @@ public class thank extends AppCompatActivity {
     private String macAddress;
     private String vehicleNo;
 
+    Boolean offlineMode;
+
     SharedPreferences sharedPreferences2;
+    SharedPreferences sharedPreferences3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +43,10 @@ public class thank extends AppCompatActivity {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
+            v.vibrate(VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
             //deprecated in API 26
-            v.vibrate(5000);
+            v.vibrate(2000);
         }
 
         Bundle extras = getIntent().getExtras();
@@ -82,10 +85,19 @@ public class thank extends AppCompatActivity {
                     sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences2.edit();
                     edit.putString("Exit_time",timestamp);
-                    edit.putString("Exit_gate",response.body().getExit());
+                    PostWiFi receivedExit=response.body();
+                    String A = receivedExit.getExit();
+                    String B = receivedExit.getToll();
+                    edit.putString("Exit_gate",A);
+                    edit.putString("toll_fee",B);
                     edit.commit();
 
-                    mHandler.postDelayed(new Runnable() {
+                    Intent goHome = new Intent(thank.this,Home.class);
+                    goHome.putExtra("macAddressListB",MacListString);
+                    startActivity(goHome);
+                    finish();
+
+                    /*mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             Intent goHome = new Intent(thank.this,Home.class);
@@ -93,7 +105,7 @@ public class thank extends AppCompatActivity {
                             startActivity(goHome);
                             finish();
                         }
-                    },TIME_OUT);
+                    },TIME_OUT);*/
 
                 }
                 PostWiFi postResponse = response.body();
@@ -103,7 +115,16 @@ public class thank extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PostWiFi> call, Throwable t) {
+                offlineMode = true;
+                sharedPreferences3 = getApplicationContext().getSharedPreferences("OFFMODE", Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = sharedPreferences3.edit();
+                edit.putBoolean("offlineMode",offlineMode);
+                edit.putString("offModeExitTimestamp",timestamp);
+                edit.putString("offModeExitMacAddress",macAddress);
+                edit.putString("offModeVehicleNo",vehicleNo);
+                edit.commit();
                 Intent noInternet = new Intent(thank.this,InternetFailure.class);
+                noInternet.putExtra("macAddressListB",MacListString);
                 startActivity(noInternet);
                 finish();
             }

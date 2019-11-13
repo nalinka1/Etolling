@@ -85,17 +85,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     String TGAP_MacAddress;
     String timeStamp;
 
+    Boolean offlineMode;
+
     private String HIGHWAYSTATUS="";
     private String highwayStatus = "Away";
     private String entranceGate ="--";
     private String entranceTime ="--";
     private String exitGate ="--";
     private String exitTime="--";
-    private float toll_fee = 0;
+    private String toll_fee = "0";
     String MacListString;
 
 
     SharedPreferences sharedPreferences2;
+    SharedPreferences sharedPreferences3;
     MyBroadcasrReceiver myBroadcasrReceiver;
 
     boolean checkEnter=true;
@@ -183,6 +186,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         has_pre_app = sharedPreferences2.getBoolean("has_pre_app",false);
         TGAP_MacAddress = sharedPreferences2.getString("TGAP_macAddress",null);
         timeStamp = sharedPreferences2.getString("timeStamp",null);
+        toll_fee = sharedPreferences2.getString("toll_fee",null);
+
+        sharedPreferences3 = getApplicationContext().getSharedPreferences("OFFMODE", Context.MODE_PRIVATE);
+        offlineMode = sharedPreferences3.getBoolean("offlineMode",false);
 
         vehicleDetails.setExit_time(sharedPreferences2.getString("Exit_time",null));
         vehicleDetails.setExit_gate(sharedPreferences2.getString("Exit_gate","---"));
@@ -840,6 +847,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(addVehicle);
 
         } else if (id == R.id.nav_refresh) {
+
             Intent refresh = new Intent(Home.this,updateData.class);
             refresh.putExtra("check_connection",0);
             refresh.putExtra("macAddressListB",MacListString);

@@ -19,8 +19,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class welcome extends AppCompatActivity {
-    private static int TIME_OUT=5000;
-    private Handler mHandler = new Handler();
+    private static int TIME_OUT=10000;
+    //private Handler mHandler = new Handler();
     private String MacListString;
 
     private String password;
@@ -29,7 +29,10 @@ public class welcome extends AppCompatActivity {
     private String macAddress;
     private String vehicleNo;
 
+    Boolean offlineMode;
+
     SharedPreferences sharedPreferences2;
+    SharedPreferences sharedPreferences3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +43,10 @@ public class welcome extends AppCompatActivity {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
+            v.vibrate(VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
             //deprecated in API 26
-            v.vibrate(5000);
+            v.vibrate(2000);
         }
 
         Bundle extras = getIntent().getExtras();
@@ -83,9 +86,16 @@ public class welcome extends AppCompatActivity {
                     sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences2.edit();
                     edit.putString("entrance_time",timestamp);
-                    edit.putString("entrance_gate",response.body().getEntrance());
+                    String A = response.body().getEntrance().toString();
+                    edit.putString("entrance_gate",A);
                     edit.commit();
 
+                    Intent goHome = new Intent(welcome.this,Home.class);
+                    goHome.putExtra("macAddressListB",MacListString);
+                    startActivity(goHome);
+                    finish();
+
+                    /*
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -94,17 +104,26 @@ public class welcome extends AppCompatActivity {
                             startActivity(goHome);
                             finish();
                         }
-                    },TIME_OUT);
+                    },TIME_OUT);*/
 
                 }
-                PostWiFi postResponse = response.body();
+                //PostWiFi postResponse = response.body();
 
 
             }
 
             @Override
             public void onFailure(Call<PostWiFi> call, Throwable t) {
+                offlineMode = true;
+                sharedPreferences3 = getApplicationContext().getSharedPreferences("OFFMODE", Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = sharedPreferences3.edit();
+                edit.putBoolean("offlineMode",offlineMode);
+                edit.putString("offModeEntranceTimestamp",timestamp);
+                edit.putString("offModeEntranceMacAddress",macAddress);
+                edit.putString("offModeVehicleNo",vehicleNo);
+                edit.commit();
                 Intent noInternet = new Intent(welcome.this,InternetFailure.class);
+                noInternet.putExtra("macAddressListB",MacListString);
                 startActivity(noInternet);
                 finish();
             }
