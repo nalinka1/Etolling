@@ -26,4 +26,8 @@ public interface JsonSignInApi {
     @POST("recharge")
     Call<topup> addPin(@Body topup newPin);
 
+    //get Vehicle classes
+    @POST("get_vehicle_classes")
+    Call<getVehicleClasses> getClasses(@Body getVehicleClasses get);
+
 }

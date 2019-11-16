@@ -9,10 +9,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -24,7 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class addVehicle extends AppCompatActivity {
     EditText vehicleNumber;
-    EditText vehicleClass;
     EditText myEmail;
     EditText myPassword;
     private String correct_address;
@@ -35,6 +38,10 @@ public class addVehicle extends AppCompatActivity {
     private String enteredPassword;
 
     JsonSignInApi addNewVehicle;
+    ArrayList got_classes;
+    ArrayAdapter<String> adapter2;
+    String MacListString;
+    private int mode_id;
 
 
     Button add;
@@ -43,26 +50,52 @@ public class addVehicle extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
 
+        //get email and password
+        SharedPreferences getDetails = getSharedPreferences("UserData",0);
+        correct_address = getDetails.getString("user_email",null);
+        correct_password= getDetails.getString("user_password",null);
+
+        //get vehicle class array
+        got_classes=getIntent().getStringArrayListExtra("classes");
+
+        // set spinner////////////////////////////////////
+        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, got_classes);
+        Spinner class_drop = (Spinner)findViewById(R.id.vehicle_class);
+        class_drop.setAdapter(adapter2);
+        class_drop.setSelection(0, true);
+        View v = class_drop.getSelectedView();
+        //((TextView)v).setTextColor(Color.YELLOW);
+        ((TextView)v).setTextSize(18);
+        vehicle_Class=got_classes.get(0).toString();
+
+        class_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                vehicle_Class=parent.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         // define text view
         vehicleNumber = (EditText)findViewById(R.id.vehicle_number);
-        vehicleClass = (EditText)findViewById(R.id.vehicle_class);
         myEmail =(EditText)findViewById(R.id.email_adress);
         myPassword=(EditText)findViewById(R.id.password);
 
         add = (Button)findViewById(R.id.add_vehicle);
 
-        //get email and password
-        SharedPreferences getDetails = getSharedPreferences("UserData",0);
-        correct_address = getDetails.getString("user_email",null);
-        correct_password= getDetails.getString("user_password",null);
+
 
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vehicle_No=vehicleNumber.getText().toString();
-                vehicle_Class=vehicleClass.getText().toString();
+
                 enteredEmail=myEmail.getText().toString();
                 enteredPassword=myPassword.getText().toString();
                 if(passwordValidation()&& EmailValidation()){
@@ -82,16 +115,23 @@ public class addVehicle extends AppCompatActivity {
                                     if(!response.isSuccessful()){
                                         return;
                                     }
-                                    Intent goHome = new Intent(addVehicle.this,Home.class);
+                                    newVehicle vehicle= response.body();
+                                    Intent goHome = new Intent(addVehicle.this,updateData.class);
+                                    goHome.putExtra("check_connection",0);
+                                    goHome.putExtra("macAddressListB",MacListString);
+                                    goHome.putExtra("mode",mode_id);
                                     startActivity(goHome);
                                     finish();
                                 }
 
                                 @Override
                                 public void onFailure(Call<newVehicle> call, Throwable t) {
-                                        Intent failed = new Intent(addVehicle.this,InternetFailure.class);
-                                        startActivity(failed);
-                                        finish();
+                                    Intent failed = new Intent(addVehicle.this,InternetFailure.class);
+                                    failed.putExtra("check_connection",0);
+                                    failed.putExtra("macAddressListB",MacListString);
+                                    failed.putExtra("mode",mode_id);
+                                    startActivity(failed);
+                                    finish();
                                 }
                             });
 

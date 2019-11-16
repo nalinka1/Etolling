@@ -842,8 +842,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(music);
 
         }else if(id==R.id.nav_vehicle){
-            Intent addVehicle = new Intent(Home.this,addVehicle.class);
+            Intent addVehicle = new Intent(Home.this,load_classes.class);
             addVehicle.putExtra("mode",mode_id);
+            addVehicle.putExtra("macAddressListB",MacListString);
             startActivity(addVehicle);
 
         } else if (id == R.id.nav_refresh) {
