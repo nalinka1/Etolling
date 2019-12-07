@@ -12,6 +12,9 @@ import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +70,7 @@ public class welcome extends AppCompatActivity {
         macAddress= getDetails2.getString("TGAP_macAddress",null);
         vehicleNo = getDetails2.getString("vehicleNo","-");
 
+        String realTime = convMillToDate(timestamp);
         /////////// send data to the server ///////////////
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://open-road-tolling.herokuapp.com/api/")
@@ -74,7 +78,7 @@ public class welcome extends AppCompatActivity {
                 .build();
         JsonWiFiAPI jsonPlaceHolderApi = retrofit.create(JsonWiFiAPI.class);
 
-        PostWiFi post = new PostWiFi(user_email,password,timestamp,vehicleNo,macAddress);
+        PostWiFi post = new PostWiFi(user_email,password,realTime,vehicleNo,macAddress);
         Call<PostWiFi> call1 = jsonPlaceHolderApi.createPost(post);
 
         call1.enqueue(new Callback<PostWiFi>() {
@@ -130,6 +134,18 @@ public class welcome extends AppCompatActivity {
         });
 
 
+
+    }
+
+    public String convMillToDate(String millTime){
+        if(millTime == null){
+            return "---";
+        }
+        else{
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            String dateString = formatter.format(new Date(Long.parseLong(millTime)));
+            return dateString;
+        }
 
     }
 }

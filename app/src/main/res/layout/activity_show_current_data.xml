@@ -179,13 +179,13 @@
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textColor="#FD111111"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.056" />
+        app:layout_constraintVertical_bias="0.064" />
 
     <TextView
         android:id="@+id/entrance_gate_current"
@@ -197,13 +197,13 @@
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textColor="#F8111111"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/highway_status_current"
-        app:layout_constraintVertical_bias="0.029" />
+        app:layout_constraintVertical_bias="0.036" />
 
     <TextView
         android:id="@+id/enrance_time_current"
@@ -215,49 +215,49 @@
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textColor="#0E0E0E"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entrance_gate_current"
-        app:layout_constraintVertical_bias="0.024" />
+        app:layout_constraintVertical_bias="0.034" />
 
     <TextView
         android:id="@+id/exit_gate_current"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textColor="#FD0C0C0C"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.569"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enrance_time_current"
-        app:layout_constraintVertical_bias="0.035" />
+        app:layout_constraintVertical_bias="0.045" />
 
     <TextView
         android:id="@+id/current_exit_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textColor="#FD0F0F0F"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.569"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exit_gate_current"
-        app:layout_constraintVertical_bias="0.027" />
+        app:layout_constraintVertical_bias="0.039" />
 
     <TextView
         android:id="@+id/Vehicle_number"
@@ -267,12 +267,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
+        android:textColor="@color/cast_expanded_controller_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.569"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_exit_time"
-        app:layout_constraintVertical_bias="0.032" />
+        app:layout_constraintVertical_bias="0.043" />
 
     <TextView
         android:id="@+id/Vehicle_category"
@@ -282,12 +283,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:textColor="@color/cast_expanded_controller_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.578"
+        app:layout_constraintHorizontal_bias="0.569"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Vehicle_number"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintVertical_bias="0.074" />
 
     <TextView
         android:id="@+id/toll_fee"
@@ -297,10 +299,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:textColor="@color/cast_expanded_controller_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.569"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Vehicle_category"
-        app:layout_constraintVertical_bias="0.086" />
+        app:layout_constraintVertical_bias="0.085" />
 </androidx.constraintlayout.widget.ConstraintLayout>
