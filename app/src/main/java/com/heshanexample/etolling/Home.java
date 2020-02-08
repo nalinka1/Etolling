@@ -74,6 +74,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     String[] macAddressList;
     //String[] macAddressList = {"50:04:b8:17:6d:85","50:04:b8:17:6d:09","82:ce:b9:92:fa:c3"};
     List<String> received_Ap = new ArrayList<String>();
+    List<String> AllAps = new ArrayList<String>();
+    Boolean check = true;
     String prev_ap="";
     String ap_recieved_time;
     String ap;
@@ -210,6 +212,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Type type9 = new TypeToken<ArrayList<String>>() {}.getType();
         received_Ap =(ArrayList) gson9.fromJson(json9, type9);
 
+        Gson gson19 = new Gson();
+        String json19 = sharedPreferences2.getString("AllAps", null);
+        Type type19 = new TypeToken<ArrayList<String>>() {}.getType();
+        AllAps =(ArrayList) gson19.fromJson(json19, type19);
+
         startnewtrip = (Button)findViewById(R.id.StartNewTrip);
         startnewtrip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,6 +242,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     edit.putString("entrance_time",null);
                     edit.putString("entrance_gate","---");
                     edit.putString("received_ap",null);
+                    edit.putString("AllAps",null);
 
                     edit.commit();
 
@@ -439,10 +447,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                         Toast.makeText(Home.this,"AP Found",Toast.LENGTH_SHORT).show();
                         setPrevAP=true;
                         /////////////////algorythm//////////////////
-                        ap = scanResult.SSID;
-                        if (!scanResult.BSSID.equals(prev_ap)){
+                        String APname = scanResult.SSID;
+                        ap = APname.substring(0,13)+APname.substring(APname.length()-5);
+                        if (AllAps==null){
+                            AllAps = new ArrayList<String>();
+                        }
+                        check = true;
+                        for (String i:AllAps){
+                            if(i.equals(ap)){
+                                check = false;
+                            }
+                        }
+                        if (check){
                             prev_ap = scanResult.BSSID;
-                            ap = scanResult.SSID;
+                            //ap = scanResult.SSID;
                             new_ap =true;
                             Date currentTime = Calendar.getInstance().getTime();
                             ap_recieved_time = String.valueOf(currentTime.getTime());
@@ -459,6 +477,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 if (temp1[1].equals("TGAP")){
                                     textView3.setText("Decision Pending");
                                     vehicleDetails.setTimeout(true);
+                                    AllAps.add(ap);
                                     received_Ap.add(ap);
                                     received_Ap.add(ap_recieved_time);
                                     TGAP_MacAddress=scanResult.BSSID;
@@ -480,6 +499,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 }
                             }
                             else if(ap.contains("SAP")){
+                                AllAps.add(ap);
                                 received_Ap.add(ap);
                                 received_Ap.add(ap_recieved_time);
                             }
@@ -493,14 +513,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 String[] temp1 = ap.split("_");
                                 String[] temp2 = received_Ap.get(received_Ap.size()-2).split("_");
                                 textView3.setText("Welcome to the Highway");
+                                AllAps.add(ap);
                                 vehicleDetails.setStatus(true);
                                 vehicleDetails.setEntrance_gate(temp2[0]);
                                 vehicleDetails.setEntrance_time(received_Ap.get(received_Ap.size()-1));
+                                new_ap = false;
+                                vehicleDetails.setTimeout(false);
                                 //TGAP_MacAddress="";
                                 //timeStamp="";
                                 Intent music = new Intent(Home.this,welcome.class);
                                 music.putExtra("macAddressListB",MacListString);
                                 startActivity(music);
+                                finish();
 
                                 if (temp1[1].equals("SAP1")){
                                     vehicleDetails.setDirection("UP");
@@ -508,14 +532,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 else if(temp1[1].equals("SAP2")){
                                     vehicleDetails.setDirection("DOWN");
                                 }
-                                new_ap = false;
-                                vehicleDetails.setTimeout(false);
+
                             }
                         }
                         else if(ap.contains("TGAP")){
                             if (received_Ap==null){
                                 received_Ap = new ArrayList<String>();
                             }
+                            if (AllAps==null){
+                                AllAps = new ArrayList<String>();
+                            }
+                            AllAps.add(ap);
                             received_Ap.add(ap);
                             received_Ap.add(ap_recieved_time);
                             has_pre_app=true;
@@ -548,6 +575,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 last_trip_ap_time = ap_recieved_time;
                                 ap="";
                                 received_Ap.clear();
+                                AllAps.clear();
                                 ap_recieved_time = "";
                                 has_pre_app = false;
                                 new_ap = false;
@@ -557,6 +585,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 Intent music = new Intent(Home.this,thank.class);
                                 music.putExtra("macAddressListB",MacListString);
                                 startActivity(music);
+                                finish();
                             }
                         }
                     }
@@ -569,6 +598,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 highwayStatus="Away";
                                 has_pre_app = false;
                                 received_Ap.clear();
+                                AllAps.clear();
                                 ap_recieved_time = "";
                                 new_ap = false;
                                 vehicleDetails.setTimeout(false);
@@ -646,6 +676,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             String json1 = gson1.toJson(received_Ap);
             edits.putString("received_ap", json1);
             edits.apply();
+
+            SharedPreferences.Editor edits11 = sharedPreferences2.edit();
+            Gson gson10 = new Gson();
+            String json10 = gson10.toJson(AllAps);
+            edits11.putString("AllAps", json10);
+            edits11.apply();
 
 
 
