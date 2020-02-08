@@ -88,6 +88,7 @@ public class thank extends AppCompatActivity {
 
                     sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences2.edit();
+                    edit.putString("Highway_Status","Away");
                     edit.putString("Exit_time",timestamp);
                     PostWiFi receivedExit=response.body();
                     String A = receivedExit.getExit();

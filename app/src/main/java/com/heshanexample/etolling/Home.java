@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     //wifi data
 
+    Button startnewtrip;
     TextView textView3;
 
     TextView textView21;
@@ -88,7 +90,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     Boolean offlineMode;
 
     private String HIGHWAYSTATUS="";
-    private String highwayStatus = "Away";
+    private String highwayStatus = "";
     private String entranceGate ="--";
     private String entranceTime ="--";
     private String exitGate ="--";
@@ -99,6 +101,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     SharedPreferences sharedPreferences2;
     SharedPreferences sharedPreferences3;
+    SharedPreferences sharedPreferences4;
     MyBroadcasrReceiver myBroadcasrReceiver;
 
     boolean checkEnter=true;
@@ -179,6 +182,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         macAddressList = MacListString.split("\n");
 
         sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
+        highwayStatus = sharedPreferences2.getString("Highway_Status","Away");
         prev_ap = sharedPreferences2.getString("prev_ap","");
         ap_recieved_time = sharedPreferences2.getString("ap_received_time",null);
         ap = sharedPreferences2.getString("ap",null);
@@ -205,6 +209,42 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String json9 = sharedPreferences2.getString("received_ap", null);
         Type type9 = new TypeToken<ArrayList<String>>() {}.getType();
         received_Ap =(ArrayList) gson9.fromJson(json9, type9);
+
+        startnewtrip = (Button)findViewById(R.id.StartNewTrip);
+        startnewtrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(highwayStatus.equals("Away")) {
+                    sharedPreferences4 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sharedPreferences4.edit();
+
+                    edit.putString("Highway_Status","Away");
+                    edit.putString("prev_ap","");
+                    edit.putString("ap_received_time",null);
+                    edit.putString("ap",null);
+                    edit.putBoolean("new_ap",false);
+                    edit.putBoolean("has_pre_app",false);
+                    edit.putString("TGAP_macAddress",null);
+                    edit.putString("timeStamp",null);
+                    edit.putString("toll_fee",null);
+                    edit.putString("Exit_time",null);
+                    edit.putString("Exit_gate","---");
+                    edit.putBoolean("Timeout",false);
+                    edit.putBoolean("status",false);
+                    edit.putString("Direction",null);
+                    edit.putString("entrance_time",null);
+                    edit.putString("entrance_gate","---");
+                    edit.putString("received_ap",null);
+
+                    edit.commit();
+
+                    Intent goHome = new Intent(Home.this,Home.class);
+                    goHome.putExtra("macAddressListB",MacListString);
+                    startActivity(goHome);
+                    finish();
+                }
+            }
+        });
 
         textView3 = (TextView)findViewById(R.id.textView3);
         //textView3.setText(MacListString);
@@ -398,7 +438,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     if (scanResult.BSSID.contains(macID/*macID.toString*/)){
                         Toast.makeText(Home.this,"AP Found",Toast.LENGTH_SHORT).show();
                         setPrevAP=true;
-                        /////////////////adayage algorithm eka//////////////////
+                        /////////////////algorythm//////////////////
                         ap = scanResult.SSID;
                         if (!scanResult.BSSID.equals(prev_ap)){
                             prev_ap = scanResult.BSSID;
@@ -483,6 +523,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             TGAP_MacAddress=scanResult.BSSID;
                             //timeStamp=String.valueOf(scanResult.timestamp);
                             timeStamp=String.valueOf(ap_recieved_time);
+                            highwayStatus = "Entering";
                         }
                         else{
                             new_ap =false;
@@ -498,7 +539,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             Date currentTime = Calendar.getInstance().getTime();
                             if ((currentTime.getTime()-Long.parseLong(received_Ap.get(received_Ap.size()-1)))>exit_timeout){
                                 textView3.setText("Thank You. Come Again.");
-                                highwayStatus= "out side the high way ";
+                                highwayStatus= "Away";
                                 prev_ap="";
                                 vehicleDetails.setStatus(false);
                                 vehicleDetails.setExit_gate(temp1[0]);
@@ -525,6 +566,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             Date currentTime = Calendar.getInstance().getTime();
                             if ((currentTime.getTime()-Long.parseLong(received_Ap.get(received_Ap.size()-1)))>entrance_timeout){
                                 textView3.setText("Just passing");
+                                highwayStatus="Away";
                                 has_pre_app = false;
                                 received_Ap.clear();
                                 ap_recieved_time = "";
@@ -552,9 +594,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     prev_ap="";
                 }*/
 
+                /*
             if(vehicleDetails.getStatus().booleanValue()){
                 highwayStatus="Entered";
-            }
+            }*/
             //delete this later
             /*if(checkEnter&&vehicleDetails.getStatus().booleanValue()){
                 checkEnter=false;
@@ -579,6 +622,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = sharedPreferences2.edit();
 
+            edit.putString("Highway_Status",highwayStatus);
             edit.putString("prev_ap",prev_ap);
             edit.putString("ap_received_time",ap_recieved_time);
             edit.putString("ap",ap);
