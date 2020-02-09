@@ -30,4 +30,8 @@ public interface JsonSignInApi {
     @POST("get_vehicle_classes")
     Call<getVehicleClasses> getClasses(@Body getVehicleClasses get);
 
+    //pay due
+    @POST("pay_due")
+    Call<pendingTransaction> check(@Body pendingTransaction pending);
+
 }

@@ -60,10 +60,10 @@ public class updateMacList extends AppCompatActivity {
                     //gotMacAddresses=true;
                     String gotohomeMAC = asd.toString();
 
-                    Intent gotMacs = new Intent(updateMacList.this,Home.class);
-                    gotMacs.putExtra("macAddressListB",gotohomeMAC);
-                    startActivity(gotMacs);
-                    finish();
+                    Intent goTPaydue = new Intent(updateMacList.this,checkDue.class);
+                    goTPaydue.putExtra("macAddressListB",gotohomeMAC);
+                    startActivity(goTPaydue);
+
                     //textView3.append(asd);
                 }
 

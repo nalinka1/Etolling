@@ -35,6 +35,8 @@ public class recharge extends AppCompatActivity {
     private String pin;
     private String MacListString;
 
+    private int fromPay;
+
     JsonSignInApi setPinJSon;
 
     @Override
@@ -45,8 +47,14 @@ public class recharge extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!= null){
             MacListString = extras.getString("macAddressListB");
-        }
+            if(extras.getInt("pay")==1){
+                fromPay=1;
 
+            }
+            else{
+                fromPay=0;
+            }
+        }
 
         myPin = (EditText)findViewById(R.id.getPin);
         myEmail =(EditText)findViewById(R.id.getEmail);
@@ -94,9 +102,21 @@ public class recharge extends AppCompatActivity {
                                     edit.putFloat("balance",newBalance);
                                     edit.commit();
 
-                                    Intent goBackHome =  new Intent(recharge.this,Home.class);
-                                    startActivity(goBackHome);
-                                    finish();
+                                    if(fromPay==1){
+                                        Intent refresh = new Intent(recharge.this,updateData.class);
+                                        refresh.putExtra("check_connection",0);
+                                        refresh.putExtra("macAddressListB",MacListString);
+                                        refresh.putExtra("mode",1);
+                                        startActivity(refresh);
+                                        finish();
+                                    }
+                                    else if(fromPay==0){
+                                        Intent goBackHome =  new Intent(recharge.this,Home.class);
+                                        goBackHome.putExtra("macAddressListB",MacListString);
+                                        startActivity(goBackHome);
+                                        finish();
+                                    }
+
 
 
 
