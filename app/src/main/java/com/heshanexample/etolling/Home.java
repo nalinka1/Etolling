@@ -87,6 +87,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     String last_trip_ap = "";
     String last_trip_ap_time = "";
     String TGAP_MacAddress;
+    String TGAP_name;
     String timeStamp;
 
     Boolean offlineMode;
@@ -191,6 +192,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         new_ap = sharedPreferences2.getBoolean("new_ap",false);
         has_pre_app = sharedPreferences2.getBoolean("has_pre_app",false);
         TGAP_MacAddress = sharedPreferences2.getString("TGAP_macAddress",null);
+        TGAP_name = sharedPreferences2.getString("TGAP_name",null);
         timeStamp = sharedPreferences2.getString("timeStamp",null);
         toll_fee = sharedPreferences2.getString("toll_fee",null);
 
@@ -232,6 +234,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     edit.putBoolean("new_ap",false);
                     edit.putBoolean("has_pre_app",false);
                     edit.putString("TGAP_macAddress",null);
+                    edit.putString("TGAP_name",null);
                     edit.putString("timeStamp",null);
                     edit.putString("toll_fee",null);
                     edit.putString("Exit_time",null);
@@ -481,6 +484,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                     received_Ap.add(ap);
                                     received_Ap.add(ap_recieved_time);
                                     TGAP_MacAddress=scanResult.BSSID;
+                                    TGAP_name = scanResult.SSID;
                                     timeStamp = String.valueOf(ap_recieved_time);
                                     //timeStamp=String.valueOf(scanResult.timestamp);
                                 }
@@ -548,6 +552,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             has_pre_app=true;
                             vehicleDetails.setTimeout(true);
                             TGAP_MacAddress=scanResult.BSSID;
+                            TGAP_name = scanResult.SSID;
                             //timeStamp=String.valueOf(scanResult.timestamp);
                             timeStamp=String.valueOf(ap_recieved_time);
                             highwayStatus = "Entering";
@@ -659,6 +664,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             edit.putBoolean("new_ap",new_ap);
             edit.putBoolean("has_pre_app",has_pre_app);
             edit.putString("TGAP_macAddress",TGAP_MacAddress);
+            edit.putString("TGAP_name",TGAP_name);
             edit.putString("timeStamp",timeStamp);
             edit.putString("Exit_time",vehicleDetails.getExit_time());
             //edit.putString("Exit_gate",vehicleDetails.getExit_gate());
