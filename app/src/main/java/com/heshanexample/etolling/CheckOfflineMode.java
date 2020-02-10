@@ -73,7 +73,7 @@ public class CheckOfflineMode extends AppCompatActivity {
                         .build();
                 JsonWiFiAPI jsonPlaceHolderApi = retrofit.create(JsonWiFiAPI.class);
 
-                PostWiFi post = new PostWiFi(user_email,password,offModeEntranceTimestamp,vehicleNo,offModeEntranceMacAddress);
+                PostWiFi post = new PostWiFi(user_email,password,offModeEntranceTimestamp,vehicleNo,offModeEntranceMacAddress,"","");
                 Call<PostWiFi> call1 = jsonPlaceHolderApi.createPost(post);
 
                 call1.enqueue(new Callback<PostWiFi>() {
@@ -120,7 +120,7 @@ public class CheckOfflineMode extends AppCompatActivity {
                         .build();
                 JsonWiFiAPI jsonPlaceHolderApi = retrofit.create(JsonWiFiAPI.class);
 
-                PostWiFi post = new PostWiFi(user_email,password,offModeExitTimestamp,vehicleNo,offModeExitMacAddress);
+                PostWiFi post = new PostWiFi(user_email,password,offModeExitTimestamp,vehicleNo,offModeExitMacAddress,"","");
                 Call<PostWiFi> call1 = jsonPlaceHolderApi.createPost(post);
 
                 call1.enqueue(new Callback<PostWiFi>() {
