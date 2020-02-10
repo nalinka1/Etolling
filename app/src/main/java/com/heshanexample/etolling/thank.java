@@ -135,6 +135,13 @@ public class thank extends AppCompatActivity {
 
 
                         }
+                        if (macResCode==403){
+
+                            Intent goHome = new Intent(thank.this,Home.class);
+                            goHome.putExtra("macAddressListB",MacListString);
+                            startActivity(goHome);
+                            finish();
+                        }
                         PostWiFi postResponse = response.body();
 
 

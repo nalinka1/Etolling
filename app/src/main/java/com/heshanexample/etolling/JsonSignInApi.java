@@ -34,4 +34,9 @@ public interface JsonSignInApi {
     @POST("pay_due")
     Call<pendingTransaction> check(@Body pendingTransaction pending);
 
+
+    //get transactions history
+    @POST("get_transactions")
+    Call<List<historyCall>> history(@Body historyCall get);
+
 }

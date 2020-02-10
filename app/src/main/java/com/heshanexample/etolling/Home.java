@@ -926,10 +926,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(myProfile);
 
         } else if (id == R.id.nav_History) {
-            Intent music = new Intent(Home.this,welcome.class);
-            music.putExtra("macAddressListB",MacListString);
-            music.putExtra("mode",mode_id);
-            startActivity(music);
+            Intent History = new Intent(Home.this,history.class);
+            History.putExtra("macAddressListB",MacListString);
+            History.putExtra("mode",mode_id);
+            startActivity(History);
+
 
         }else if(id==R.id.nav_vehicle){
             Intent addVehicle = new Intent(Home.this,load_classes.class);
