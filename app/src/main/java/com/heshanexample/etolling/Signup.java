@@ -59,6 +59,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     private String userName;
     private int revesionNumber;
 
+    private int Vehicle=1;
+
 
 
     @Override
@@ -186,6 +188,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
+                            } catch (NullPointerException e){
                             }
 
                             ///////////////////////////// get vehicle ........................................
@@ -197,12 +200,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                                 getList.put("className",vehi.getClassName());
                                 list.add(getList);
                             }
-                            SharedPreferences storeVehicle = getApplicationContext().getSharedPreferences("UserData",0);
-                            SharedPreferences.Editor edits = storeVehicle.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(list);
-                            edits.putString("vehicle", json);
-                            edits.apply();
+
 
                             ///////////////////////////////
                             ////image//////
@@ -232,8 +230,23 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                             edit.commit();
 
 
+                            //save vehicle details
+
+                            if(list.size()==0||list==null){
+                                Vehicle=0;
+                            }
+
+                            SharedPreferences storeVehicle = getApplicationContext().getSharedPreferences("UserData",0);
+                            SharedPreferences.Editor edits = storeVehicle.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(list);
+                            edits.putString("vehicle", json);
+                            edits.apply();
+
+
                             Intent goHome = new Intent(Signup.this,Mode.class);
                             goHome.putExtra("check_connection",1);
+                            goHome.putExtra("vehicle",Vehicle);
                             startActivity(goHome);
                             finish();
 

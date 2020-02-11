@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,6 +22,7 @@ public class history extends AppCompatActivity {
 
     JsonSignInApi requesthistory;
     String MacListString;
+    ListView historyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,9 @@ public class history extends AppCompatActivity {
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
         correct_address = getDetails.getString("user_email",null);
         correct_password= getDetails.getString("user_password",null);
+
+
+        historyList =(ListView)findViewById(R.id.allHistory);
 
         Bundle extras = getIntent().getExtras();
         if(extras!= null){
@@ -48,11 +55,23 @@ public class history extends AppCompatActivity {
                     return;
                 }
                 List<historyCall> receivedhistory=response.body();
-                for(historyCall myHistories: receivedhistory){
-                    String a= myHistories.getEgress();
-                    String b= myHistories.getDuration();
-
+                if(receivedhistory.size()==0){
+                    List<String> noHis=new LinkedList<>();
+                    noHis.add("No history");
+                    ArrayAdapter adapter = new ArrayAdapter<String>(getBaseContext(),android.R.layout.simple_list_item_1,noHis);
+                    historyList.setAdapter(adapter);
                 }
+                else{
+                    List<String> myHis=new LinkedList<>();
+                    for(historyCall myHistories: receivedhistory){
+                        myHis.add(myHistories.toString());
+
+                    }
+                    ArrayAdapter adapter = new ArrayAdapter<String>(getBaseContext(),android.R.layout.simple_list_item_1,myHis);
+                    historyList.setAdapter(adapter);
+                }
+
+
             }
 
             @Override

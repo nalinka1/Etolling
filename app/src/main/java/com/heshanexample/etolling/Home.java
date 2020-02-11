@@ -126,6 +126,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     int[] a;
     ArrayList allVehicles;
 
+    private boolean oneVehicle=true;
+
     JsonSignInApi jsUpdate ;
 
     private boolean checkLoc=false;
@@ -290,70 +292,81 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         user_email = getDetails.getString("user_email",null);
 
 
-        // get vehicle list
-        Gson gson = new Gson();
-        String json = getDetails.getString("vehicle", null);
-        Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
-        allVehicles =(ArrayList) gson.fromJson(json, type);
-        ArrayList<String> vehicle_drop_down = new ArrayList<>();
-        a= new int[allVehicles.size()];
-        int alreadySelectedIndex= getDetails.getInt("vehicle_index",0);
-        a[0]=alreadySelectedIndex;
-        HashMap selectedVehicle = (HashMap)allVehicles.get(alreadySelectedIndex);
-        vehicle_drop_down.add(selectedVehicle.get("vehicleNo")+" : "+selectedVehicle.get("className"));
-        int k=1;
-        for(int i =0; i<allVehicles.size();i++){
-            if(i!=alreadySelectedIndex){
-                HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
-                vehicle_drop_down.add(a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className"));
-                a[k]=i;
-                k++;
+
+        try{
+            // get vehicle list
+            Gson gson = new Gson();
+            String json = getDetails.getString("vehicle", null);
+            Type type = new TypeToken<ArrayList<HashMap>>() {}.getType();
+            allVehicles =(ArrayList) gson.fromJson(json, type);
+            ArrayList<String> vehicle_drop_down = new ArrayList<>();
+            a= new int[allVehicles.size()];
+            int alreadySelectedIndex= getDetails.getInt("vehicle_index",0);
+            a[0]=alreadySelectedIndex;
+            HashMap selectedVehicle = (HashMap)allVehicles.get(alreadySelectedIndex);
+            vehicle_drop_down.add(selectedVehicle.get("vehicleNo")+" : "+selectedVehicle.get("className"));
+            int k=1;
+            for(int i =0; i<allVehicles.size();i++){
+                if(i!=alreadySelectedIndex){
+                    HashMap a_vehicle_details = (HashMap) allVehicles.get(i);
+                    vehicle_drop_down.add(a_vehicle_details.get("vehicleNo")+" : "+a_vehicle_details.get("className"));
+                    a[k]=i;
+                    k++;
+                }
             }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, vehicle_drop_down);
+            Spinner vehicle_drop = (Spinner)findViewById(R.id.selectVehicle);
+            vehicle_drop.setAdapter(adapter);
+            vehicle_drop.setSelection(0, true);
+            View v = vehicle_drop.getSelectedView();
+            ((TextView)v).setTextColor(Color.YELLOW);
+            ((TextView)v).setTextSize(20);
+
+            ///////////////// update vehicle no /////////////////
+            HashMap currentVehicle = (HashMap)allVehicles.get(alreadySelectedIndex);
+            SharedPreferences sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPreferences2.edit();
+            edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
+            edit.putString("className",currentVehicle.get("className").toString());
+            edit.commit();
+
+
+            ////////////////////////////////////////////////////
+            // setting onselectItem listner on the vehicle adddrp menu
+            vehicle_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    int vehicleIndex = parent.getSelectedItemPosition();
+                    SharedPreferences storeVehiclePosition = getApplicationContext().getSharedPreferences("UserData",0);
+                    SharedPreferences.Editor editPosition = storeVehiclePosition.edit();
+                    editPosition.putInt("vehicle_index",a[vehicleIndex]);
+                    //HashMap currentVehicle = (HashMap)allVehicles.get(1);
+                    HashMap currentVehicle = (HashMap)allVehicles.get(vehicleIndex);
+                    SharedPreferences sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sharedPreferences2.edit();
+                    edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
+                    edit.putString("className",currentVehicle.get("className").toString());
+                    edit.commit();
+                    ((TextView) view).setTextColor(Color.YELLOW);
+                    ((TextView) view).setTextSize(20);
+                    editPosition.commit();
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, vehicle_drop_down);
-        Spinner vehicle_drop = (Spinner)findViewById(R.id.selectVehicle);
-        vehicle_drop.setAdapter(adapter);
-        vehicle_drop.setSelection(0, true);
-        View v = vehicle_drop.getSelectedView();
-        ((TextView)v).setTextColor(Color.YELLOW);
-        ((TextView)v).setTextSize(20);
+        catch (NullPointerException e){
+            oneVehicle=false;
+        }
+        catch (ArrayIndexOutOfBoundsException e1){
+            oneVehicle=false;
+        }
 
-        ///////////////// update vehicle no /////////////////
-        HashMap currentVehicle = (HashMap)allVehicles.get(alreadySelectedIndex);
-        SharedPreferences sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences2.edit();
-        edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
-        edit.putString("className",currentVehicle.get("className").toString());
-        edit.commit();
-
-
-        ////////////////////////////////////////////////////
-        // setting onselectItem listner on the vehicle adddrp menu
-        vehicle_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int vehicleIndex = parent.getSelectedItemPosition();
-                SharedPreferences storeVehiclePosition = getApplicationContext().getSharedPreferences("UserData",0);
-                SharedPreferences.Editor editPosition = storeVehiclePosition.edit();
-                editPosition.putInt("vehicle_index",a[vehicleIndex]);
-                //HashMap currentVehicle = (HashMap)allVehicles.get(1);
-                HashMap currentVehicle = (HashMap)allVehicles.get(vehicleIndex);
-                SharedPreferences sharedPreferences2 = getApplicationContext().getSharedPreferences("TRIPDATA", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = sharedPreferences2.edit();
-                edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
-                edit.putString("className",currentVehicle.get("className").toString());
-                edit.commit();
-                ((TextView) view).setTextColor(Color.YELLOW);
-                ((TextView) view).setTextSize(20);
-                editPosition.commit();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 // get header
         View navHeader = navigationView.getHeaderView(0);
@@ -939,11 +952,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(addVehicle);
 
         } else if (id == R.id.nav_refresh) {
+            int passUpdate=1;
 
             Intent refresh = new Intent(Home.this,updateData.class);
             refresh.putExtra("check_connection",0);
             refresh.putExtra("macAddressListB",MacListString);
             refresh.putExtra("mode",mode_id);
+            refresh.putExtra("pass",passUpdate);
             startActivity(refresh);
             finish();
 

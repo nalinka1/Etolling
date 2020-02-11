@@ -42,6 +42,7 @@ public class addVehicle extends AppCompatActivity {
     ArrayAdapter<String> adapter2;
     String MacListString;
     private int mode_id;
+    private int Vehicle;
 
 
     Button add;
@@ -49,6 +50,12 @@ public class addVehicle extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
+
+        // get data from previous intent
+        Bundle extras = getIntent().getExtras();
+        MacListString = extras.getString("macAddressListB",null);
+        mode_id= extras.getInt("mode",1);
+        Vehicle=extras.getInt("vehicle",10);
 
         //get email and password
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
@@ -116,9 +123,10 @@ public class addVehicle extends AppCompatActivity {
                                         return;
                                     }
                                     newVehicle vehicle= response.body();
-                                    Intent goHome = new Intent(addVehicle.this,updateData.class);
+                                    Intent goHome = new Intent(addVehicle.this,MainActivity.class);
                                     goHome.putExtra("check_connection",0);
                                     goHome.putExtra("macAddressListB",MacListString);
+                                    goHome.putExtra("vehicle",Vehicle);
                                     goHome.putExtra("mode",mode_id);
                                     startActivity(goHome);
                                     finish();

@@ -45,6 +45,7 @@ public class updateData extends AppCompatActivity {
     private int check;
     private int mode_id;
     private String MacListString;
+    int passUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,8 @@ public class updateData extends AppCompatActivity {
         check = extras.getInt("check_connection",0);
         MacListString = extras.getString("macAddressListB",null);
         mode_id= extras.getInt("mode",1);
+        passUpdate=extras.getInt("pass",0);
+
 
         //Get pre variable for update paramenters
         SharedPreferences getup = getSharedPreferences("UserData",0);
@@ -97,6 +100,15 @@ public class updateData extends AppCompatActivity {
 
                     user_name = userFirstName+" "+userLastName;
 
+                    getVehicle[] userVehicles = new Gson().fromJson(signIndetails.getVehicle().toString(), getVehicle[].class);
+                    ArrayList list = new ArrayList();
+                    for(getVehicle vehi : userVehicles){
+                        HashMap<String , Object> getList = new HashMap<>();
+                        getList.put("vehicleNo",vehi.getVehicleNo());
+                        getList.put("className",vehi.getClassName());
+                        list.add(getList);
+                    }
+
                     try {
                         String accountInString = mapper.writeValueAsString(response.body().getAccount());
                         account userAccount = mapper.readValue(accountInString,account.class);
@@ -107,16 +119,14 @@ public class updateData extends AppCompatActivity {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (NullPointerException e){
+
                     }
 
-                    getVehicle[] userVehicles = new Gson().fromJson(signIndetails.getVehicle().toString(), getVehicle[].class);
-                    ArrayList list = new ArrayList();
-                    for(getVehicle vehi : userVehicles){
-                        HashMap<String , Object> getList = new HashMap<>();
-                        getList.put("vehicleNo",vehi.getVehicleNo());
-                        getList.put("className",vehi.getClassName());
-                        list.add(getList);
-                    }
+
+
+
+
                     SharedPreferences storeVehicle = getApplicationContext().getSharedPreferences("UserData",0);
                     SharedPreferences.Editor edits = storeVehicle.edit();
                     Gson gson = new Gson();
@@ -162,15 +172,31 @@ public class updateData extends AppCompatActivity {
                 // calling home page if all are ok
                 //highway
                 if(mode_id==1){
-                    Intent home = new Intent(updateData.this,updateMacList.class);
-                    startActivity(home);
-                    finish();
+                    if(passUpdate==1){
+                        Intent home = new Intent(updateData.this,MainActivity.class);
+                        startActivity(home);
+                        finish();
+                    }
+                    else{
+                        Intent home = new Intent(updateData.this,updateMacList.class);
+                        startActivity(home);
+                        finish();
+                    }
+
                 }
                 // parking
                 else if(mode_id==2){
-                    Intent parking = new Intent(updateData.this, Parking.class);
-                    startActivity(parking);
-                    finish();
+                    if(passUpdate==1){
+                        Intent parking = new Intent(updateData.this, MainActivity.class);
+                        startActivity(parking);
+                        finish();
+                    }
+                    else{
+                        Intent parking = new Intent(updateData.this, Parking.class);
+                        startActivity(parking);
+                        finish();
+                    }
+
                 }
 
 

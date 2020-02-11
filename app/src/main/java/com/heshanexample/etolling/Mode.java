@@ -21,6 +21,9 @@ public class Mode extends AppCompatActivity {
     Button Select;
     TextView showSelection;
 
+    private int Vehicle;
+    private String MacListString=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,11 @@ public class Mode extends AppCompatActivity {
 
         modes = (RadioGroup) findViewById(R.id.radioGroup);
         showSelection = (TextView)findViewById(R.id.Selected_mode);
+
+        Bundle extras = getIntent().getExtras();
+        if(extras!= null){
+            Vehicle = extras.getInt("vehicle",10);
+        }
 
         Select =(Button)findViewById(R.id.select_button);
         Select.setOnClickListener(new View.OnClickListener() {
@@ -42,17 +50,28 @@ public class Mode extends AppCompatActivity {
                 }
                 else if(modeText.equalsIgnoreCase("Parking")){
                     mode_id=2;
+
                 }
                 SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
                 SharedPreferences.Editor edit = storeInput.edit();
                 edit.putInt("mode",mode_id);
                 edit.commit();
+                if(Vehicle==0){
+                    Intent addVehicle = new Intent(Mode.this, load_classes.class);
+                    addVehicle.putExtra("mode", mode_id);
+                    addVehicle.putExtra("macAddressListB", MacListString);
+                    addVehicle.putExtra("vehicle",Vehicle);
+                    startActivity(addVehicle);
+                }else{
+                    Intent highway = new Intent(Mode.this,updateData.class);
+                    highway.putExtra("check_connection",1);
+                    highway.putExtra("mode",mode_id);
+                    startActivity(highway);
+                    finish();
 
-                Intent highway = new Intent(Mode.this,updateData.class);
-                highway.putExtra("check_connection",1);
-                highway.putExtra("mode",mode_id);
-                startActivity(highway);
-                finish();
+
+                }
+
 
             }
         });

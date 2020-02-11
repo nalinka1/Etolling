@@ -22,6 +22,7 @@ public class load_classes extends AppCompatActivity {
     private String correct_password;
     String MacListString;
     private int mode_id;
+    private int Vehicle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class load_classes extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         MacListString = extras.getString("macAddressListB",null);
         mode_id= extras.getInt("mode",1);
+        Vehicle=extras.getInt("vehicle",10);
 
 
         //get email and password
@@ -56,6 +58,7 @@ public class load_classes extends AppCompatActivity {
                 Intent get_vehicle= new Intent(load_classes.this,addVehicle.class);
                 get_vehicle.putExtra("mode",mode_id);
                 get_vehicle.putExtra("macAddressListB",MacListString);
+                get_vehicle.putExtra("vehicle",Vehicle);
                 get_vehicle.putStringArrayListExtra("classes",got_classes);
                 startActivity(get_vehicle);
                 finish();
