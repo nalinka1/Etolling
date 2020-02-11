@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 addVehicle.putExtra("macAddressListB", MacListString);
                 addVehicle.putExtra("vehicle",0);
                 startActivity(addVehicle);
+                finish();
             }
             else{
                     Home = new Intent(MainActivity.this, updateData.class);

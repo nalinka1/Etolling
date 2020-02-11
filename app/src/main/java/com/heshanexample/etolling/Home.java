@@ -83,7 +83,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     vehicleDetails vehicleDetails = new vehicleDetails();
     boolean has_pre_app = false;
     int entrance_timeout = 60000;
-    int exit_timeout = 60000;
+    int exit_timeout = 20000;
     String last_trip_ap = "";
     String last_trip_ap_time = "";
     String TGAP_MacAddress;
@@ -319,7 +319,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             vehicle_drop.setAdapter(adapter);
             vehicle_drop.setSelection(0, true);
             View v = vehicle_drop.getSelectedView();
-            ((TextView)v).setTextColor(Color.YELLOW);
+            ((TextView)v).setTextColor(Color.GRAY);
             ((TextView)v).setTextSize(20);
 
             ///////////////// update vehicle no /////////////////
@@ -347,7 +347,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     edit.putString("vehicleNo",currentVehicle.get("vehicleNo").toString());
                     edit.putString("className",currentVehicle.get("className").toString());
                     edit.commit();
-                    ((TextView) view).setTextColor(Color.YELLOW);
+                    ((TextView) view).setTextColor(Color.GRAY);
                     ((TextView) view).setTextSize(20);
                     editPosition.commit();
 

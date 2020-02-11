@@ -63,6 +63,7 @@ public class updateMacList extends AppCompatActivity {
                     Intent goTPaydue = new Intent(updateMacList.this,checkDue.class);
                     goTPaydue.putExtra("macAddressListB",gotohomeMAC);
                     startActivity(goTPaydue);
+                    finish();
 
                     //textView3.append(asd);
                 }

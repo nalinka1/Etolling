@@ -64,8 +64,9 @@ public class history extends AppCompatActivity {
                 else{
                     List<String> myHis=new LinkedList<>();
                     for(historyCall myHistories: receivedhistory){
-                        myHis.add(myHistories.toString());
-
+                        String receivedMyHistory="";
+                        receivedMyHistory="Entrance : "+myHistories.getEntrance()+"\nEgress : "+myHistories.getEgress()+"\nVehicle No : "+myHistories.getVehicleNo()+"\nDuration : "+myHistories.getDuration()+"\nToll : "+myHistories.getToll();
+                        myHis.add(receivedMyHistory);
                     }
                     ArrayAdapter adapter = new ArrayAdapter<String>(getBaseContext(),android.R.layout.simple_list_item_1,myHis);
                     historyList.setAdapter(adapter);

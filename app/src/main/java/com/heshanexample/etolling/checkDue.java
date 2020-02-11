@@ -55,7 +55,7 @@ public class checkDue extends AppCompatActivity {
                     Intent goHome = new Intent(checkDue.this,Home.class);
                     goHome.putExtra("macAddressListB",MacListString);
                     startActivity(goHome);
-                    //finish();
+                    finish();
                 }
                 else{
                     fromPay=1;
