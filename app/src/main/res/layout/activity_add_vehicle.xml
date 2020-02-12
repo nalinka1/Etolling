@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/home_background_wg"
     tools:context="com.heshanexample.etolling.addVehicle">
 
     <TextView
@@ -14,15 +15,14 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Enter details about the adding vehicle"
+        android:text="Add Your New Vehicle"
         android:textColor="#0A0A0A"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.052" />
 
     <TextView
         android:id="@+id/textView8"
@@ -39,8 +39,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.157" />
+        app:layout_constraintTop_toBottomOf="@+id/UserEmailTextView"
+        app:layout_constraintVertical_bias="0.06" />
 
     <TextView
         android:id="@+id/textView9"
@@ -76,7 +76,7 @@
         app:layout_constraintHorizontal_bias="0.085"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintVertical_bias="0.08" />
+        app:layout_constraintVertical_bias="0.077" />
 
     <TextView
         android:id="@+id/textView11"
@@ -94,7 +94,7 @@
         app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView10"
-        app:layout_constraintVertical_bias="0.123" />
+        app:layout_constraintVertical_bias="0.104" />
 
     <EditText
         android:id="@+id/vehicle_number"
@@ -109,15 +109,15 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.848"
+        app:layout_constraintHorizontal_bias="0.831"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.147" />
+        app:layout_constraintTop_toBottomOf="@+id/UserEmailTextView"
+        app:layout_constraintVertical_bias="0.06" />
 
     <EditText
         android:id="@+id/email_adress"
-        android:layout_width="158dp"
-        android:layout_height="45dp"
+        android:layout_width="165dp"
+        android:layout_height="41dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -127,15 +127,15 @@
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.827"
+        app:layout_constraintHorizontal_bias="0.834"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vehicle_class"
-        app:layout_constraintVertical_bias="0.036" />
+        app:layout_constraintVertical_bias="0.058" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="159dp"
-        android:layout_height="42dp"
+        android:layout_width="157dp"
+        android:layout_height="33dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -144,26 +144,26 @@
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.834"
+        app:layout_constraintHorizontal_bias="0.806"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_adress"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintVertical_bias="0.077" />
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="385dp"
+        android:layout_height="78dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
-        android:text="This vehicle details will be verified with the Governement sources. you will be notified after confirmation process. After passing all the processes, this vehicle will be added to your account."
+        android:text="    This vehicle details will be verified with the Governement sources. You will be notified after confirmation process. After passing all the processes, the vehicle will be added to your account."
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.439"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.153" />
+        app:layout_constraintVertical_bias="0.158" />
 
     <Button
         android:id="@+id/add_vehicle"
@@ -181,17 +181,17 @@
 
     <Spinner
         android:id="@+id/vehicle_class"
-        android:layout_width="163dp"
-        android:layout_height="38dp"
+        android:layout_width="165dp"
+        android:layout_height="34dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.844"
+        app:layout_constraintHorizontal_bias="0.834"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vehicle_number"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintVertical_bias="0.035" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

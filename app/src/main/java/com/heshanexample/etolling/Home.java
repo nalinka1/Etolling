@@ -1,5 +1,6 @@
 package com.heshanexample.etolling;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +12,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -165,6 +171,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        //set action bar
+
+
+
 
         //setting navigation menu item icons
         Menu menu = navigationView.getMenu();
@@ -885,36 +896,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 LogoutCondition.setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
-                        SharedPreferences.Editor clearUserData = storeInput.edit();
-                        clearUserData.remove("user_password");
-                        clearUserData.remove("user_email");
-                        clearUserData.remove("encoded_image");
-                        clearUserData.remove("user_name");
-                        clearUserData.remove("first_name");
-                        clearUserData.remove("last_name");
-                        clearUserData.remove("address");
-                        clearUserData.remove("id_name");
-                        clearUserData.remove("phone_number");
-                        clearUserData.remove("account_number");
-                        clearUserData.remove("owner_name");
-                        clearUserData.remove("balance");
-                        clearUserData.remove("encoded_image");
-                        clearUserData.commit();
-
-                        Intent logout = new Intent(Home.this,MainActivity.class);
-                        startActivity(logout);
-                        finish();
+                        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+                            ((ActivityManager) getApplicationContext().getSystemService(ACTIVITY_SERVICE))
+                                    .clearApplicationUserData(); // note: it has a return value!
+                        } else {
+                            // use old hacky way, which can be removed
+                            // once minSdkVersion goes above 19 in a few years.
+                        }
+//
                     }
-                });
-
-                LogoutCondition.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
+
                 AlertDialog AlertLogout = LogoutCondition.create();
                 AlertLogout.setTitle("Logout !!!");
                 AlertLogout.show();
@@ -964,6 +961,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         } else if (id == R.id.nav_mode) {
             Intent change = new Intent(Home.this,Mode.class);
+            change.putExtra("vehicle",10);
             startActivity(change);
             finish();
 

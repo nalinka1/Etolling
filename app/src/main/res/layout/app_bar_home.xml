@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#8CC2EE"
+        app:backgroundTint="#CAC9C4"
         app:elevation="8dp"
         app:rippleColor="#F7F3A3A3"
         app:srcCompat="@drawable/home_current" />

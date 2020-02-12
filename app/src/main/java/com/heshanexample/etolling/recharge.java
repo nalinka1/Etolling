@@ -68,7 +68,7 @@ public class recharge extends AppCompatActivity {
         correct_password= getDetails.getString("user_password",null);
         balance = getDetails.getFloat("balance",0);
 
-        currentBalance.setText(Double.toString(balance));
+        currentBalance.setText("Rs. "+Double.toString(balance));
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +111,7 @@ public class recharge extends AppCompatActivity {
                                         finish();
                                     }
                                     else if(fromPay==0){
-                                        Intent goBackHome =  new Intent(recharge.this,Home.class);
+                                        Intent goBackHome =  new Intent(recharge.this,MainActivity.class);
                                         goBackHome.putExtra("macAddressListB",MacListString);
                                         startActivity(goBackHome);
                                         finish();

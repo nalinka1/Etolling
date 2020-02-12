@@ -124,7 +124,7 @@ public class Profile extends AppCompatActivity {
 
                         textshow1.setText(" : "+ownerName);
                         textshow2.setText(" : "+accountNumber);
-                        textshow3.setText(" : "+Double.toString(balance));
+                        textshow3.setText(" : Rs. "+Double.toString(balance));
                         textshow4.setText("");
                         textshow5.setText("");
                         textshow6.setText("");
@@ -142,7 +142,7 @@ public class Profile extends AppCompatActivity {
 
                         textshow1.setText(" : "+ownerName);
                         textshow2.setText(" : "+accountNumber);
-                        textshow3.setText(" : "+Double.toString(balance));
+                        textshow3.setText(" : Rs. "+Double.toString(balance));
                         textshow4.setText("");
                         textshow5.setText("");
                         textshow6.setText("");

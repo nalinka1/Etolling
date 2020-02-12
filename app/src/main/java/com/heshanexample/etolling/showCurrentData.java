@@ -65,7 +65,7 @@ public class showCurrentData extends AppCompatActivity {
         entrance_time.setText(entranceTime);
         exit_gate.setText(exitGate);
         exit_time.setText(exitTime);
-        toll_fee1.setText(toll_fee);
+        toll_fee1.setText("Rs. "+toll_fee);
         VehicleNo.setText(VehicleNumber);
         VehicleCat.setText(VehicleCategory);
     }
