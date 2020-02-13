@@ -126,6 +126,7 @@ public class thank extends AppCompatActivity {
                             String B = receivedExit.getToll();
                             edit.putString("Exit_gate",A);
                             edit.putString("toll_fee",B);
+                            edit.putBoolean("scanning",false);
                             edit.commit();
 
                             Intent goHome = new Intent(thank.this,Home.class);

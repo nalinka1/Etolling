@@ -147,23 +147,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView15"
         app:layout_constraintVertical_bias="0.144" />
 
-    <EditText
-        android:id="@+id/getPin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.901"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentBalance"
-        app:layout_constraintVertical_bias="0.162" />
-
     <Button
         android:id="@+id/submit_topup"
         android:layout_width="wrap_content"
@@ -176,7 +159,26 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getPin" />
+        app:layout_constraintTop_toBottomOf="@+id/userImageView"
+        app:layout_constraintVertical_bias="0.849" />
+
+    <EditText
+        android:id="@+id/getPin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="number|textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/submit_topup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.901"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentBalance"
+        app:layout_constraintVertical_bias="0.229" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
