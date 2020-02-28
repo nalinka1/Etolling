@@ -143,7 +143,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
                         public void onResponse(Call<PostSignIn> call, Response<PostSignIn> response) {
                             if(!response.isSuccessful()){
                                 int code = response.code();
-                                getEmail.setText("response: "+code);
                                 if(code==403){
                                     getPassword.getText().clear();
                                     passwordValidation();
@@ -166,8 +165,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
 
                             ObjectMapper mapper = new ObjectMapper();
                             PostSignIn signIndetails = response.body();
-
-                            //Log.d("tag",signIndetails.toString());
 
                             userFirstName = signIndetails.getFirstName();
                             userLastName= signIndetails.getLastName();

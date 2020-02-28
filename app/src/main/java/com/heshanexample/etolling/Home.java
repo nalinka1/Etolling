@@ -545,29 +545,32 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                             if (has_pre_app){
                                 String test1 = received_Ap.get(received_Ap.size()-2);
                                 if (!received_Ap.get(received_Ap.size()-2).equals(ap)){
-                                    String[] temp1 = ap.split("_");
-                                    String[] temp2 = received_Ap.get(received_Ap.size()-2).split("_");
-                                    textView3.setText("Welcome to the Highway");
-                                    AllAps.add(ap);
-                                    vehicleDetails.setStatus(true);
-                                    vehicleDetails.setEntrance_gate(temp2[0]);
-                                    vehicleDetails.setEntrance_time(received_Ap.get(received_Ap.size()-1));
-                                    new_ap = false;
-                                    vehicleDetails.setTimeout(false);
-                                    //TGAP_MacAddress="";
-                                    //timeStamp="";
-                                    Intent music = new Intent(Home.this,welcome.class);
-                                    music.putExtra("macAddressListB",MacListString);
-                                    startActivity(music);
-                                    finish();
+                                    if(!ap.contains("TGAP")){
+                                        String[] temp1 = ap.split("_");
+                                        String[] temp2 = received_Ap.get(received_Ap.size()-2).split("_");
+                                        if (temp1[0].equals(temp2[0])){
+                                            textView3.setText("Welcome to the Highway");
+                                            AllAps.add(ap);
+                                            vehicleDetails.setStatus(true);
+                                            vehicleDetails.setEntrance_gate(temp2[0]);
+                                            vehicleDetails.setEntrance_time(received_Ap.get(received_Ap.size()-1));
+                                            new_ap = false;
+                                            vehicleDetails.setTimeout(false);
+                                            //TGAP_MacAddress="";
+                                            //timeStamp="";
+                                            Intent music = new Intent(Home.this,welcome.class);
+                                            music.putExtra("macAddressListB",MacListString);
+                                            startActivity(music);
+                                            finish();
 
-                                    if (temp1[1].equals("SAP1")){
-                                        vehicleDetails.setDirection("UP");
+                                            if (temp1[1].equals("SAP1")){
+                                                vehicleDetails.setDirection("UP");
+                                            }
+                                            else if(temp1[1].equals("SAP2")){
+                                                vehicleDetails.setDirection("DOWN");
+                                            }
+                                        }
                                     }
-                                    else if(temp1[1].equals("SAP2")){
-                                        vehicleDetails.setDirection("DOWN");
-                                    }
-
                                 }
                             }
                             else if(ap.contains("TGAP")){

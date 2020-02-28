@@ -25,6 +25,7 @@ public class recharge extends AppCompatActivity {
     EditText myPassword;
     TextView currentBalance;
     Button add;
+    Button logout;
 
     private String correct_address;
     private String correct_password;
@@ -62,6 +63,35 @@ public class recharge extends AppCompatActivity {
         currentBalance=(TextView)findViewById(R.id.currentBalance);
 
         add = (Button)findViewById(R.id.submit_topup);
+        logout = (Button)findViewById(R.id.logout);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
+                SharedPreferences.Editor clearUserData = storeInput.edit();
+                clearUserData.remove("user_password");
+                clearUserData.remove("user_email");
+                clearUserData.remove("encoded_image");
+                clearUserData.remove("user_name");
+                clearUserData.remove("first_name");
+                clearUserData.remove("last_name");
+                clearUserData.remove("address");
+                clearUserData.remove("id_name");
+                clearUserData.remove("phone_number");
+                clearUserData.remove("account_number");
+                clearUserData.remove("owner_name");
+                clearUserData.remove("balance");
+                clearUserData.remove("encoded_image");
+                clearUserData.remove("vehicle");
+                clearUserData.remove("mode");
+                clearUserData.commit();
+
+                Intent logout = new Intent(recharge.this,MainActivity.class);
+                startActivity(logout);
+                finish();
+            }
+        });
 
         SharedPreferences getDetails = getSharedPreferences("UserData",0);
         correct_address = getDetails.getString("user_email",null);

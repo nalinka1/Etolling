@@ -22,76 +22,21 @@
         app:layout_constraintVertical_bias="0.052"
         app:srcCompat="@drawable/mode_image" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <Button
+        android:id="@+id/highway_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/button_highway"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="0.14">
+        app:layout_constraintVertical_bias="0.242" />
 
 
-        <RadioButton
-            android:id="@+id/radio_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:drawablePadding="50dp"
-            android:onClick="checkButton"
-            android:text="Highway"
-            android:textSize="24sp" />
-
-        <RadioButton
-            android:id="@+id/radio_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="50dp"
-            android:onClick="checkButton"
-            android:text="Parking"
-            android:textSize="24sp" />
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/Selected_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Selected Mode is Highway  "
-        android:textColor="#0A0A0A"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.11" />
-
-    <Button
-        android:id="@+id/select_button"
-        android:layout_width="143dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#B78EAC09"
-        android:fadingEdge="horizontal|vertical"
-        android:text="Select"
-        android:textColor="#E6000000"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Selected_mode"
-        app:layout_constraintVertical_bias="0.21" />
 </androidx.constraintlayout.widget.ConstraintLayout>

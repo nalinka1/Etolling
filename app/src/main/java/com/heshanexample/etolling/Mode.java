@@ -16,10 +16,8 @@ public class Mode extends AppCompatActivity {
 
     private int check;
     private int mode_id;
-    RadioGroup modes;
-    RadioButton mode;
-    Button Select;
-    TextView showSelection;
+    private Button highway;
+    private Button parking;
 
     private int Vehicle;
     private String MacListString=null;
@@ -29,58 +27,40 @@ public class Mode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode);
 
-        modes = (RadioGroup) findViewById(R.id.radioGroup);
-        showSelection = (TextView)findViewById(R.id.Selected_mode);
+
 
         Bundle extras = getIntent().getExtras();
         if(extras!= null){
             Vehicle = extras.getInt("vehicle",10);
         }
+        highway=(Button)findViewById(R.id.highway_mode);
 
-        Select =(Button)findViewById(R.id.select_button);
-        Select.setOnClickListener(new View.OnClickListener() {
+        highway.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int state = modes.getCheckedRadioButtonId();
-                mode = findViewById(state);
-                String modeText= mode.getText().toString();
-                if(modeText.equalsIgnoreCase("Highway")){
-                    mode_id=1;
-
-                }
-                else if(modeText.equalsIgnoreCase("Parking")){
-                    mode_id=2;
-
-                }
+            public void onClick(View view) {
+                mode_id=1;
                 SharedPreferences storeInput = getApplicationContext().getSharedPreferences("UserData",0);
                 SharedPreferences.Editor edit = storeInput.edit();
                 edit.putInt("mode",mode_id);
                 edit.commit();
+
                 if(Vehicle==0){
                     Intent addVehicle = new Intent(Mode.this, load_classes.class);
                     addVehicle.putExtra("mode", mode_id);
                     addVehicle.putExtra("macAddressListB", MacListString);
                     addVehicle.putExtra("vehicle",Vehicle);
                     startActivity(addVehicle);
-                }else{
-                    Intent highway = new Intent(Mode.this,updateData.class);
-                    highway.putExtra("check_connection",1);
-                    highway.putExtra("mode",mode_id);
+                }else {
+                    Intent highway = new Intent(Mode.this, updateData.class);
+                    highway.putExtra("check_connection", 1);
+                    highway.putExtra("mode", mode_id);
                     startActivity(highway);
                     finish();
-
-
                 }
-
-
             }
         });
 
 
     }
-    protected void checkButton(View v){
-        int state = modes.getCheckedRadioButtonId();
-        mode = (RadioButton) findViewById(state);
-        showSelection.setText("Selected Mode : "+mode.getText());
-    }
+
 }
